@@ -1,0 +1,89 @@
+﻿@model IEnumerable<PCartWeb.Models.UserViewModel>
+@{
+    ViewBag.Title = "ViewMemberList";
+    var accnt = "";
+    var status = "";
+}
+
+<h2 style="margin: 25px 0 25px 0;">Member List</h2>
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+    <p>
+        @Html.ActionLink("Add Member", "CreateMember")
+    </p>
+<div class="table-responsive table-hover">
+    <table class="table" style="margin: 20px;">
+        <thead>
+            <tr class="bg-dark">
+                <th scope="col">
+                    Firstname
+                </th>
+                <th scope="col">
+                    Lastname
+                </th>
+                <th scope="col">
+                    Date Created
+                </th>
+                <th scope="col">
+                    Date Updated
+                </th>
+                <th scope="col">
+                    Email
+                </th>
+                <th scope="col">
+                    Role
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="displayMembers">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="row">
+                        @Html.DisplayFor(modelItem => item.Firstname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lastname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created_at)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Updated_at)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Role)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditUser", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "DetailsOfUser", new { id = item.Id }) |
+                        @if (item.IsActive == "Active")
+                        {
+                            status = item.IsActive;
+                            accnt = item.AccountId;
+                            <button type="button" onclick="location.href = '@Url.Action("DeactivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Deactivate</button>
+                        }
+                        else
+                        {
+                            status = item.IsActive;
+                            accnt = item.AccountId;
+                            <button type="button" onclick="location.href = '@Url.Action("ActivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Activate</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

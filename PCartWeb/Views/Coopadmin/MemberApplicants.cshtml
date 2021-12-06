@@ -1,0 +1,44 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewApplicantsModel>
+
+@{
+    ViewBag.Title = "MemberApplicants";
+}
+
+<h2>Member Applicants</h2>
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<table class="table table-hover">
+    <tr class="bg-dark">
+        <th>
+            @Html.DisplayNameFor(model => model.Fullname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Filepath)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    string form = item.Filepath.Replace("~/Documents", "");
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fullname)
+        </td>
+        <td>
+            @Html.ActionLink(form, "Download", new { fileName = item.Filepath });
+        </td>
+        <td>
+            @Html.ActionLink("Approve", "ApproveApplicant", new { id=item.Id }) |
+            @Html.ActionLink("Reject", "RejectApplicant", new { id =item.Id}) 
+        </td>
+    </tr>
+}
+
+</table>

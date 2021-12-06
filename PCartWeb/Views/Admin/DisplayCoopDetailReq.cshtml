@@ -1,0 +1,117 @@
+﻿@using PCartWeb.Models
+@model dynamic
+
+@{
+    ViewBag.Title = "DetailsCoopReq";
+    var ids = "";
+    foreach (CoopViewModel coopView in Model.Users)
+    {
+        ids = coopView.Id.ToString();
+    }
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css">
+</head>
+
+<div class="container" style="margin-bottom: 50px;">
+    <h2 style="margin-top: 50px">Coop Details </h2>
+
+    <div style="margin-top: 20px; background-color: white; padding: 50px; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+        <form>
+            <div class="form-row">
+                @foreach (CoopDocumentImages coopDocument in Model.Images)
+                {
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">Document Image</label>
+                        <img src="@Url.Content("~/Images/"+coopDocument.Document_image)" width="200" height="200" />
+                    </div>
+                }
+            </div>
+
+            @foreach (CoopViewModel coopView in Model.Users)
+            {
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">Profile Picture</label>
+                        <img src="@Url.Content("~/Images/"+coopView.Image)" class="form" width="250" height="250" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">Coop Name</label>
+                        <input type="text" class="form-control" id="inputfirstName" value="@coopView.CoopName" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">Coop Address</label>
+                        <input type="text" class="form-control" id="inputfirstName" value="@coopView.CoopAddress" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Coop Contact</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.CoopContact" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Email</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.Email" disabled>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">First Name</label>
+                        <input type="text" class="form-control" id="inputfirstName" value="@coopView.Firstname " disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Last Name</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.Lastname" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Contact</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.Contact" disabled>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputfirstName">Address</label>
+                        <input type="text" class="form-control" id="inputfirstName" value="@coopView.Address " disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Birth Date</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.Bdate" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputlastName">Gender</label>
+                        <input type="text" class="form-control" id="inputlastName" value="@coopView.Gender" disabled>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputAddress">Status</label>
+                        <input type="text" class="form-control" id="inputAddress" value="@coopView.CStatus" disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputGender">Date Applied</label>
+                        <input type="text" class="form-control" id="lastName" value="@coopView.Created_at" disabled>
+                    </div>
+                </div>
+                <div>
+                    @if (coopView.Approval != "Approved")
+                    {
+                        <button type="button" onclick="location.href='@Url.Action("ApproveAccntReq", "Admin", new { id = ids })'" class="btn btn-primary">Approve</button>
+                        <button type="button" onclick="location.href='@Url.Action("RejectReqAccnt", "Admin", new { id = ids })'" class="btn btn-warning">Reject</button>
+                        @Html.ActionLink("Back to List", "ViewPendingCoop", "", htmlAttributes: new { @class = "btn btn-primary float-right" })
+                    }
+                    else
+                    {
+                        <h6 class="text-danger">You already approved this COOP.</h6>
+                    }
+                </div>
+            }
+        </form>
+    </div>
+</div>

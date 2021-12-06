@@ -1,0 +1,148 @@
+﻿@model PCartWeb.Models.ViewCustomerOrder
+
+@{
+    ViewBag.Title = "OrderDetails";
+}
+
+<h2>OrderDetails</h2>
+
+<style>
+    .origprice {
+        text-decoration: line-through;
+    }
+</style>
+<h5>Order Status: @Model.UserOrders.OStatus</h5>
+<table class="table">
+    <tr>
+        <th>
+            Image
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Subtotal
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.ProdOrders)
+    {
+        <tr>
+            <td>
+                <img src="@Url.Content("~/Images/" + item.ProdImage)" width="50" height="50" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProdName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td>
+                @if (item.DiscountedPrice != 0)
+                {
+                    <div class="price mt-1">
+                        <span class="origprice">
+                            &#8369; @Html.DisplayFor(modelItem => item.Price)
+                        </span>
+                        &#8369; @Html.DisplayFor(modelItem => item.DiscountedPrice)
+                        @(((item.Price - item.DiscountedPrice) / item.Price) * 100)&percnt; OFF
+                    </div> <!-- price-wrap.// -->
+                }
+                else if (item.MemberDiscountedPrice != 0)
+                {
+                    <div class="price mt-1">
+                        <span class="origprice">
+                            &#8369; @Html.DisplayFor(modelItem => item.Price)
+                        </span>
+                        &#8369; @Html.DisplayFor(modelItem => item.MemberDiscountedPrice)
+                        @(((item.Price - item.MemberDiscountedPrice) / item.Price) * 100)&percnt; OFF
+                    </div> <!-- price-wrap.// -->
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Price)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTotal)
+            </td>
+        </tr>
+    }
+</table>
+
+@if (Model.VoucherUsed != null)
+{
+    <p>Voucher Used: @Html.DisplayFor(modelItem => Model.VoucherUsed.VoucherUsed)</p>
+    if (Model.VoucherUsed.DiscountType == "Percent")
+    {
+        var discount = Model.UserOrders.TotalPrice * (Model.VoucherUsed.Discount / 100);
+        <p>Voucher Discount: - &#8369; @Html.DisplayFor(modelItem => discount)</p>
+    }
+    else
+    {
+        <p>Voucher Discount: - &#8369; @Html.DisplayFor(modelItem => Model.VoucherUsed.Discount)</p>
+    }
+}
+
+<p>Delivery Fee: PHP @Html.DisplayFor(modelItem => Model.UserOrders.Delivery_fee)</p>
+<p>Product Total: &#8369; @Html.DisplayFor(modelItem => modelItem.UserOrders.TotalPrice)</p>
+<p>Order Total: &#8369; @(decimal.Round(Model.UserOrders.TotalPrice + Convert.ToDecimal(Model.UserOrders.Delivery_fee), 2, MidpointRounding.AwayFromZero))</p>
+
+@if (Model.DeliveryDetails != null)
+{
+    <p>
+        Driver: @Html.DisplayFor(modelItem => Model.DeliveryDetails.Name)<br />
+        Contact No.: @Html.DisplayFor(modelItem => Model.DeliveryDetails.ContactNo)<br />
+    </p>
+
+    if (Model.DeliveryDetails.PickUpDate != null)
+    {
+        <p>Pick-up Date: @Html.DisplayFor(modelItem => Model.DeliveryDetails.PickUpDate)</p>
+    }
+    if (Model.DeliveryDetails.PickUpSuccessDate != null)
+    {
+        <p>Pick-up Success Date: @Html.DisplayFor(modelItem => Model.DeliveryDetails.PickUpSuccessDate)</p>
+    }
+    if (Model.DeliveryDetails.ExpectedDeldate != null)
+    {
+        <p>Expected Delivery Date: @Html.DisplayFor(modelItem => Model.DeliveryDetails.ExpectedDeldate)</p>
+    }
+    if (Model.DeliveryDetails.DateDelivered != null)
+    {
+        <p>Date Delivered: @Html.DisplayFor(modelItem => Model.DeliveryDetails.DateDelivered)</p>
+    }
+
+    <p>Status: @Html.DisplayFor(modelItem => Model.DeliveryDetails.Status)</p>
+}
+
+@if (Model.UserOrders.OStatus == "To Pay")
+{
+    <button class="btn btn-primary" onclick="location.href = '@Url.Action("CancelOrder", "Home", new { id = Model.UserOrders.Id })'">Cancel Order</button>
+}
+else if (Model.UserOrders.OStatus == "Complete")
+{
+    if (Convert.ToDateTime(Model.DeliveryDetails.DateDelivered) <= DateTime.Now.AddDays(7) && Model.IsRated == false && Model.RefundStatus != "Request")
+    {
+        <p>Kindly check the item/s that you receive if it is defective or not.<br />
+            You will be only given a total of 7 days to return/refund your order.<br />
+            Once you press the rate button you cannot return/refund your order.<br /></p>
+
+        <button class="btn btn-primary" onclick="location.href = '@Url.Action("ReturnRefundItem", "Home", new { id = Model.UserOrders.Id })'">Return/Refund</button>
+    }
+
+    if(Model.RefundStatus == "Request")
+    {
+        <p>Your return/refund request is being reviewed by the shop. Please wait patiently.</p>
+    }
+
+    <button class="btn btn-primary" onclick="location.href = '@Url.Action("RateOrder", "Home", new { id = Model.UserOrders.Id })'">Rate Order</button>
+}
+
+@Html.ActionLink("Back", "MyOrders")

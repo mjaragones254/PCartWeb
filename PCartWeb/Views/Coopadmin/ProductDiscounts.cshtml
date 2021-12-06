@@ -1,0 +1,355 @@
+﻿@model PCartWeb.Models.ProductDiscount
+
+@{
+    ViewBag.Title = "ProductDiscounts";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        .custom-ml {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("ProductDiscounts", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="container form-horizontal custom-form-1 custom-container w-75">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Product Discounts</h4>
+        <hr />
+        @ViewBag.message
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Discount.Name, new { htmlAttributes = new { @class = "form-control", @id = "Name" } })
+                <p class="text-danger" style="display: none" id="Error1"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount.Percent, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Discount.Percent, new { htmlAttributes = new { @class = "form-control", @id = "Percent" } })
+                <p class="text-danger" style="display: none" id="Error2"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount.DateStart, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Discount.DateStart, new { htmlAttributes = new { @id = "DateStart", @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+                <p class="text-danger" style="display: none" id="ErrorDate1"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount.DateEnd, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Discount.DateEnd, new { htmlAttributes = new { @id = "DateEnd", @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+                <p class="text-danger" style="display: none" id="ErrorDate2"></p>
+            </div>
+        </div>
+
+        <p class="text-danger" style="display: none" id="Error"></p>
+        @if (Model.Product.Count() != 0)
+        {
+            <div class="table-responsive table-hover">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="toggleAll" /> All Products
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.Product)
+                    {
+                        foreach (var price in Model.Price)
+                        {
+                            if (price.ProdId == item.Id)
+                            {
+                                foreach (var cost in Model.Cost)
+                                {
+                                    if (cost.ProdId == item.Id)
+                                    {
+                                        foreach (var manu in Model.Manufacturer)
+                                        {
+                                            if (manu.ProdId == item.Id)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input name="isCheck" type="checkbox" class="check" value="@item.Id" />
+                                                    </td>
+                                                    <td>
+                                                        <img src="@Url.Content("~/Images/"+item.Product_image)" class="card-img-top" height="50" width="30" alt="...">
+                                                    </td>
+                                                    <td>
+                                                        <p>@item.Product_Name</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>@item.Product_qty</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>PHP @cost.Cost</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>PHP @price.Price</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>@item.ExpiryDate</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>@manu.Manufacturer</p>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                </table>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="text-danger" style="display: block" id="Error1">You do not have a product to be discounted. Kindly add a product to the product management section.</p>
+        }
+    </div>
+</div>
+    }
+
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+                window.location.href = '/Coopadmin/ViewListDiscount/';
+            };
+        </script>
+    }
+
+    <script>
+        $("#toggleAll").click(function () {
+            $(".check").prop('checked', this.checked);
+        });
+
+        $(".check").click(function () {
+            if (!this.checked) {
+                $("#toggleAll").prop('checked', false);
+            }
+            else if ($(".check").length == $(".check" + ":checked").length) {
+                $("#toggleAll").prop('checked', true);
+            }
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/themes/light.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/shortcut-buttons-flatpickr.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            flatpickr("#DateStart", {
+                enableTime: true,
+                dateFormat: 'd/m/Y h:i K',
+                minDate: "today",
+                onReady: function () {
+                    if (this.amPM)
+                        this.amPM.textContent = "AM";
+                },
+                plugins: [
+                    ShortcutButtonsPlugin({
+                        button: [
+                            {
+                                label: "Today"
+                            },
+                            {
+                                label: 'Clear'
+                            }
+                        ],
+                        onClick: (index, fp) => {
+                            let date;
+                            switch (index) {
+                                case 0:
+                                    date = new Date();
+                                    fp.close();
+                                    break;
+                                case 1:
+                                    fp.clear();
+                                    fp.close();
+                                    break;
+                            }
+                            fp.setDate(date);
+                        }
+                    })
+                ]
+            });
+
+            flatpickr("#DateEnd", {
+                enableTime: true,
+                dateFormat: 'd/m/Y h:i K',
+                minDate: "today",
+                onReady: function () {
+                    if (this.amPM)
+                        this.amPM.textContent = "AM";
+                },
+                plugins: [
+                    ShortcutButtonsPlugin({
+                        button: [
+                            {
+                                label: "Today"
+                            },
+                            {
+                                label: 'Clear'
+                            }
+                        ],
+                        onClick: (index, fp) => {
+                            let date;
+                            switch (index) {
+                                case 0:
+                                    date = new Date();
+                                    fp.close();
+                                    break;
+                                case 1:
+                                    fp.clear();
+                                    fp.close();
+                                    break;
+                            }
+                            fp.setDate(date);
+                        }
+                    })
+                ]
+            });
+
+            function ConvertHour(hour, modifier) {
+                if (hour === '12') {
+                    hour = '00';
+                }
+                if (modifier === 'PM') {
+                    hour = parseInt(hour, 10) + 12;
+                }
+                return hour;
+            }
+
+            $('#form1').submit(function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                var dateStart1 = $("#DateStart").val();
+                var dateEnd1 = $("#DateEnd").val();
+                var itemSelected = [];
+
+                $('.check').each(function () {
+                    if ($(this).is(":checked")) {
+                        itemSelected.push($(this).val());
+                    }
+                });
+
+                itemSelected = itemSelected.toString();
+
+                if ($("#Name").val() == "" || $("#Percent").val() == 0 || dateStart1 == "" || dateEnd1 == "" || itemSelected == "" || $("#Percent").val() > 100) {
+                    if ($("#Name").val() == "") {
+                        document.getElementById("Error1").style.display = "block";
+                        document.getElementById("Error1").innerHTML = "This field is required. Kindly enter a valid name."
+                    }
+                    else {
+                        document.getElementById("Error1").style.display = "none";
+                    }
+                    if ($("#Percent").val() == 0) {
+                        document.getElementById("Error2").style.display = "block";
+                        document.getElementById("Error2").innerHTML = "This field is required. Kindly enter a valid percent."
+                    }
+                    else {
+                        document.getElementById("Error2").style.display = "none";
+                    }
+                    if (dateEnd1 == "") {
+                        document.getElementById('ErrorDate2').style.display = "block";
+                        document.getElementById("ErrorDate2").innerHTML = "Date end is required. Kindly enter a valid date end.";
+                    }
+                    else {
+                        document.getElementById('ErrorDate2').style.display = "none";
+                    }
+                    if (dateStart1 == "") {
+                        document.getElementById('ErrorDate1').style.display = "block";
+                        document.getElementById("ErrorDate1").innerHTML = "Date start is required. Kindly enter a valid date start.";
+                    }
+                    else {
+                        document.getElementById('ErrorDate1').style.display = "none";
+                    }
+                    if (itemSelected == "") {
+                        document.getElementById('Error').style.display = "block";
+                        document.getElementById("Error").innerHTML = "Kindly choose a product to be discounted.";
+                    }
+                    else {
+                        document.getElementById('Error').style.display = "none";
+                    }
+                    if ($("#Percent").val() > 100) {
+                        document.getElementById("Error2").style.display = "block";
+                        document.getElementById("Error2").innerHTML = "Percent cannot be greater than a 100. Kindly enter a valid percentage."
+                    }
+                    else {
+                        document.getElementById("Error2").style.display = "none";
+                    }
+                }
+                else {
+                    var time1 = dateStart1.split(' ');
+                    var date1 = time1[0].split('/');
+                    
+                    var realTime1 = time1[1].split(':');
+                    realTime1[0] = ConvertHour(realTime1[0], time1[2]);
+                    var dateStart2 = new Date(date1[2], date1[1] - 1, date1[0], realTime1[0], realTime1[1]);
+                    var time2 = dateEnd1.split(' ');
+                    var date2 = time2[0].split('/');
+                    var realTime2 = time2[1].split(':');
+                    realTime2[0] = ConvertHour(realTime2[0], time2[2])
+                    var dateEnd2 = new Date(date2[2], date2[1] - 1, date2[0], realTime2[0], realTime2[1]);
+                    var currDate = new Date();
+                    var currDate2 = new Date(currDate.getFullYear(), currDate.getMonth() - 1, currDate.getDate(), currDate.getHours(), currDate.getMinutes());
+
+                    if (dateStart2 >= dateEnd2) {
+                        
+                        document.getElementById('ErrorDate2').style.display = "none";
+                        document.getElementById('ErrorDate1').style.display = "block";
+                        document.getElementById("ErrorDate1").innerHTML = "Date start is higher than date end. Kindly enter a valid date start.";
+                    }
+                    //else if (dateStart2 < currDate2) {
+                    //    document.getElementById('ErrorDate2').style.display = "none";
+                    //    document.getElementById('ErrorDate1').style.display = "block";
+                    //    document.getElementById("ErrorDate1").innerHTML = "Date start cannot be lesser than today. Kindly input a valid date start.";
+                    //}
+                    else if (dateEnd2 < currDate2) {
+                        document.getElementById('ErrorDate1').style.display = "none";
+                        document.getElementById('ErrorDate2').style.display = "block";
+                        document.getElementById("ErrorDate2").innerHTML = "Date end cannot be lesser than today. Kindly input a valid date end.";
+                    }
+                    else {
+                        _this.unbind('submit').submit();
+                    }
+                }
+            });
+        });
+    </script>
+
+    <div>
+        @Html.ActionLink("Back to List", "ViewListDiscount")
+    </div>

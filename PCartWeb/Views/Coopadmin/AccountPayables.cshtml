@@ -1,0 +1,135 @@
+﻿@model PCartWeb.Models.AccountPayablesRepModel
+
+@{
+    ViewBag.Title = "AccountPayables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+<h2>Account Payables</h2>
+<div class="custom-form-1 custom-container w-100 col-4">
+    <h4>Accounts Payable</h4>
+    <hr />
+    <div class="form-group">
+        <p style="color:red;">@ViewBag.ErrorMessage</p>
+        @if (Model.IsSucess == true)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                You have successfully paid your fees. Thank you
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (Model.Status != null)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                @Model.Status <br />
+                @Model.DueDate <br />
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <input class="form-control" disabled type="text" value="Total: PHP @Model.TotalTobePay" />
+        <br />
+        <input name="submit" type="submit" id="submit" data-toggle="modal" data-target="#exampleModal2" value="Mark as Done" class="btn btn-default" />
+    </div>
+</div>
+@if (Model.CommissionSale != null)
+{
+    <div class="table-responsive table-hover">
+        <table class="table">
+            <tr class="bg-dark">
+                <th>
+                    Order No.
+                </th>
+                <th>
+                    Commission Fee
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Date Created
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.CommissionSale)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserOrderID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommissionFee)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created_at)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+@using (Html.BeginForm("AccountPayables", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Account Resignation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="ReceiptFile" class="form-control" />
+                </div>
+                <div class="modal-body">
+                    <input type="radio" id="paypal" name="Mode" checked value="Paypal">
+                    <label for="paypal">Paypal</label>
+                    <br>
+                    <input type="radio" id="mlhuillier" name="Mode" checked value="MLhuillier">
+                    <label for="mlhuillier">MLhuillier</label>
+                    <br>
+                    <input type="radio" id="cebuana" name="Mode" value="Cebuana">
+                    <label for="cebuana">Cebuana</label>
+                    <br>
+                    <input type="radio" id="palawan" name="Mode" value="Palawan"/>
+                    <label for="palawan">Palawan</label>
+                </div>
+                <div class="modal-body">
+                    @Html.EditorFor(model => Model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="modal-body">
+                    @Html.EditorFor(model => Model.Fullname, new { htmlAttributes = new { @class = "form-control" } })
+                    
+                </div>
+                <div class="modal-body">
+                    @Html.EditorFor(model => Model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(model => Model.TotalTobePay)
+                    <p>The total amount to be payed is PHP @Model.TotalTobePay. Would you like to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="submit" value="Proceed" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

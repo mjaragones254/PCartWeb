@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewProdReqList>
+
+@{
+    ViewBag.Title = "ViewProdRequest";
+}
+
+<h4>Product Proposals</h4>
+<hr />
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created_at)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated_at)
+                </td>
+                <td>
+                    @Html.ActionLink("Approve", "ApproveProdReq", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "RequestDetails", new { id = item.Id }) |
+                    @Html.ActionLink("Reject", "RejectProdReq", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

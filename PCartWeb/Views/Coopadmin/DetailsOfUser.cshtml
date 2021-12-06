@@ -1,0 +1,64 @@
+﻿@model PCartWeb.Models.CustomerDetailsModel
+
+@{
+    ViewBag.Title = "DetailsOfUser";
+}
+
+<div class="container" style="margin-bottom: 50px;">
+    <h2 style="margin-top: 50px">Details of Users</h2>
+
+    <div style="margin-top: 20px; background-color: white; padding: 50px; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputfirstName">First Name</label>
+                    <input type="text" class="form-control" id="inputfirstName" value="@Model.Firstname" disabled>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputlastName">Last Name</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.Lastname" disabled>
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" id="inputAddress" value="@Model.Address" disabled>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputGender">Contact</label>
+                    <input type="text" class="form-control" id="lastName" value="@Model.Contact" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputBdate">Birthdate</label>
+                    <input type="text" class="form-control" id="inputBdate" value="@Model.Bdate">
+                </div>
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group col-md-3">
+                    <label for="inputGender">Gender</label>
+                    <input type="text" class="form-control" id="inputGender" value="@Model.Gender" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputRole">Role</label>
+                    <input type="text" class="form-control" id="inputRole" value="@Model.Role" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="dateCreated">Date Created</label>
+                    <input type="text" class="form-control" id="dateCreated" value="@Model.Created_at" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="dateUpdated">Date Updated</label>
+                    <input type="text" class="form-control" id="dateUpdated" value="@Model.Updated_at" disabled>
+                </div>
+            </div>
+            <div>
+                @Html.ActionLink("Edit", "EditUser", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+                @Html.ActionLink("Back to List", "ViewMemberList", " ", htmlAttributes: new { @class = "btn btn-primary" })
+            </div>
+        </form>
+    </div>
+</div>

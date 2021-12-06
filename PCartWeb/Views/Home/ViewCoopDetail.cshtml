@@ -1,0 +1,74 @@
+﻿@model PCartWeb.Models.CoopDetailsModel
+
+@{
+    ViewBag.Title = "ViewCoopDetail";
+}
+
+<h2>ViewCoopDetail</h2>
+
+<div>
+    <h4>CoopDetailsModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Approval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approval)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MembershipForm)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MembershipForm)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Coop_Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Coop_Created)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Coop_Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Coop_Updated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

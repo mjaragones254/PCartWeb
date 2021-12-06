@@ -1,0 +1,106 @@
+﻿@model PCartWeb.Models.ViewProdReqList
+
+@{
+    ViewBag.Title = "RequestDetails";
+}
+
+<h2>Item Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            <img src="@Url.Content("~/Images/"+Model.Image)" width="250" height="250" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_desc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_desc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_manufact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_manufact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_qty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_qty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_cost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_cost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product_price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product_price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Created_at)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created_at)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Updated_at)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated_at)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Approve", "ApproveProdReq", new { id = Model.Id }) |
+    @Html.ActionLink("Reject", "RejectProdReq", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

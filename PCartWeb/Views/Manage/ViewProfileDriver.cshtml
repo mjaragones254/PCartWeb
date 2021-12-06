@@ -1,0 +1,250 @@
+﻿@model PCartWeb.Models.DriverDetailsModel
+
+@{
+    ViewBag.Title = "ViewProfileDriver";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css">
+</head>
+
+
+<div class="container" style="margin-bottom: 50px;">
+    <h2 style="margin-top: 50px">View Profile </h2>
+
+    <div style="margin-top: 20px; background-color: white; padding: 50px; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputfirstName">First Name</label>
+                    <input type="text" class="form-control" id="inputfirstName" value="@Model.Firstname" disabled>
+                </div><!--Label-->
+                <div class="form-group col-md-6">
+                    <label for="inputlastName">Last Name</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.Lastname" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputfirstName">Image</label>
+                    <img src="@Url.Content("~/Images/"+Model.Image)" width="250" height="250" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputfirstName">Driver's  License</label>
+                    <img src="@Url.Content("~/Images/"+Model.Driver_License)" width="250" height="250" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputfirstName">Contact</label>
+                    <input type="text" class="form-control" id="inputfirstName" value="@Model.Contact" disabled>
+                </div><!--Label-->
+                <div class="form-group col-md-4">
+                    <label for="inputlastName">Address</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.Address" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputlastName">Gender</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.Gender" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputfirstName">Birthday</label>
+                    <input type="text" class="form-control" id="inputfirstName" value="@Model.Bdate" disabled>
+                </div><!--Label-->
+                <div class="form-group col-md-4">
+                    <label for="inputlastName">Status</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.CStatus" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputlastName">Plate Number</label>
+                    <input type="text" class="form-control" id="inputlastName" value="@Model.PlateNum" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputAddress">Created</label>
+                    <input type="text" class="form-control" id="inputAddress" value="@Model.Created_at" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputGender">Updated</label>
+                    <input type="text" class="form-control" id="lastName" value="@Model.Updated_at" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputBdate">User Id</label>
+                    <input type="text" class="form-control" id="inputBdate" value="@Model.UserId" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputBdate">Coop Id</label>
+                    <input type="text" class="form-control" id="inputBdate" value="@Model.CoopId" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputGender">Active</label>
+                    <input type="text" class="form-control" id="inputGender" value="@Model.IsActive" disabled>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputRole">Available</label><br />
+                    @Html.DisplayFor(model => model.IsAvailable)
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="dateCreated">On Duty</label><br />
+                    @Html.DisplayFor(model => model.IsOnDuty)
+                </div>
+            </div>
+
+            <div>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
+                @Html.ActionLink("Back to List", "Index", "", htmlAttributes: new { @class = "btn btn-primary" })
+            </div>
+        </form>
+    </div>
+</div>   
+
+    @*<dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Firstname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Firstname)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Lastname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Lastname)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Image)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Image)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Driver_License)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Driver_License)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Contact)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Contact)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Gender)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Bdate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Bdate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CStatus)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CStatus)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PlateNum)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PlateNum)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Created_at)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Created_at)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Updated_at)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Updated_at)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.UserId)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UserId)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CoopId)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CoopId)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsActive)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsAvailable)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsAvailable)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsOnDuty)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsOnDuty)
+                </dd>
+
+            </dl>
+        </div>*@
+

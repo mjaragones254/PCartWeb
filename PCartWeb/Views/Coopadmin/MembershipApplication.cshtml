@@ -1,0 +1,61 @@
+﻿@model PCartWeb.Models.CoopFormModel
+@{
+    ViewBag.Title = "MembershipApplication";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var form = "";
+    form = Model.MembershipForm;
+}
+
+<h2>Membership Application</h2>
+<p>
+    @Html.ActionLink("View Member Applicants", "MemberApplicants")
+</p>
+<p class="text-danger">@ViewBag.ErrorMessage</p>
+@using (Html.BeginForm("UploadMembershipForm", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    if (String.IsNullOrEmpty(form))
+    {
+        <p>Please upload COOP's membership form.</p>
+        <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+    }
+    else
+    {
+        <p>You can still update the membership form by uploading.</p>
+        <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+    }
+}
+
+@if (Model.MembershipFee != 0)
+{
+    <p><b>Membership Fee: </b> @Html.DisplayFor(model => Model.MembershipFee)</p>
+}
+
+@using (Html.BeginForm("MembershipFee", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>Membership Fee</p>
+    <input type="number" name="MembershipFee" value="" placeholder="Fee" class="form-control col-md-10" />
+    <button class="btn btn-outline-secondary" type="submit">Save</button>
+}
+
+@if (Model.MembersDiscount != 0)
+{
+    <p><b>Member's Discount: </b> @Html.DisplayFor(model => Model.MembersDiscount)</p>
+}
+
+@using (Html.BeginForm("MembersDiscount", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>Member's Discount</p>
+    <input type="number" name="MembersDiscount" value="" placeholder="Discount" class="form-control col-md-10" />
+    <button class="btn btn-outline-secondary" type="submit">Save</button>
+}
+
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}

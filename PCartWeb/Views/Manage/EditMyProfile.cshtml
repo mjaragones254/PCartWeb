@@ -1,0 +1,165 @@
+﻿@model PCartWeb.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "EditMyProfile";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        .custom-ml {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("EditMyProfile", "Manage", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="container form-horizontal custom-form-1 custom-container w-75">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Edit My Profile</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                <img src="@Url.Content("~/Images/"+Model.Image)" width="180" height="180" />
+                <input type="file" name="ImageFile" />
+                @ViewBag.message
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Firstname, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Lastname, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Contact, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Bdate, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                <input type="date" id="Bdate" name="Bdate" class="form-control" placeholder="dd/mm/yyyy" />
+                <p class="text-danger" style="visibility: hidden" id="ErrorBDate"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.DropDownListFor(vm => vm.Gender, Model.GenderList, Model.Gender, htmlAttributes: new { @class = "form-control" })
+                <p class="text-danger">@ViewBag.GenderError</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
+    <script type="text/javascript">
+        google.maps.event.addDomListener(window, 'load', function () {
+            var options = {
+                componentRestrictions: { country: "ph" }
+            };
+
+            var input = document.getElementById('Address');
+            var places = new google.maps.places.Autocomplete(input, options);
+            google.maps.event.addListener(places, 'place_changed', function () {
+                var place = places.getPlace();
+                $("#Longitude").val("" + place.geometry.location.lng());
+                $("#Latitude").val("" + place.geometry.location.lat());
+            });
+
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            flatpickr("#Bdate", {
+                dateFormat: 'j/n/Y',
+                minDate: "1/1/1905",
+                maxDate: "today"
+            });
+
+            $('#form1').submit(function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                var bdate = $("#Bdate").val();
+                var date = bdate.split('/');
+                var currDate = new Date();
+                var year = currDate.getFullYear() - 18;
+
+                if (bdate == null) {
+                    document.getElementById('ErrorBDate').style.visibility = "visible";
+                    document.getElementById("ErrorBDate").innerHTML = "This field is required. Kindly iput your birthdate.";
+                }
+                else if (date[2] > year) {
+                    document.getElementById('ErrorBDate').style.visibility = "visible";
+                    document.getElementById("ErrorBDate").innerHTML = "You must be 18 to register.";
+                }
+                else {
+                    _this.unbind('submit').submit();
+                }
+            });
+        });
+    </script>

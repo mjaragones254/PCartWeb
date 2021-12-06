@@ -1,0 +1,49 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewInbox>
+
+@{
+    ViewBag.Title = "InboxChat";
+}
+
+<h4 class="ml-4 mt-2">Inbox Chat</h4>
+
+<head>
+    <style>
+        a h6, a p {
+            color: black;
+            list-style: none;
+        }
+    </style>
+</head>
+
+<div class="container" style="margin-top: 20px;">
+    <div class="rounded bg-white mb-3" style="box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+        <div class="box-title border-bottom p-3 bg-light">
+            <h6 class="m-0">Messages</h6>
+        </div>
+        <div class="box-body p-0">
+            <div class="p-3">
+
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <div>
+                            <a href="CoopChat/@item.ReceiversId">
+                                <h6>@item.ReceiversName</h6>
+                                <p>@item.LatestMessage</p>
+                                <p><small class="text-muted">@item.DateSent</small></p>
+                            </a>
+                        </div>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <p>Inbox is empty.</p>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+

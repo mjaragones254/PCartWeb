@@ -1,0 +1,104 @@
+﻿@model PCartWeb.Models.ArrangePickUpDetails
+
+@{
+    ViewBag.Title = "ArrangePickUp";
+}
+
+<head>
+    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+    <link href="~/Style/ui.css" rel="stylesheet" />
+    <link href="~/Style/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+    <style>
+        .origprice {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<h2>Arrange Pick-Up Riders</h2>
+
+@using (Html.BeginForm("ArrangePickUp", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    @Html.HiddenFor(model => model.UserOrderId);
+    <div class="form-group">
+        @Html.LabelFor(model => model.PickUpDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="date" id="PickUpDate" name="PickUpDate" class="form-control" placeholder="dd/mm/yyyy" />
+            <p class="text-danger" style="visibility: hidden" id="ErrorDate"></p>
+        </div>
+    </div>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>
+                Image
+            </th>
+            <th>
+                Driver Name
+            </th>
+            <th>
+                Contact No.
+            </th>
+            <th>
+                For Delivery
+            </th>
+            <th></th>
+        </tr>
+
+        @for (int i = 0; i < Model.Drivers.Count; i++)
+        {
+            <tr>
+                <td>
+                    <input name="driverId" type="radio" value="@Model.Drivers[i].UserId" />
+                </td>
+                <td>
+                    <img src="@Url.Content("../Images/" + Model.Drivers[i].Image)" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Drivers[i].Firstname) @Html.DisplayFor(modelItem => Model.Drivers[i].Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Drivers[i].ContactNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Drivers[i].ForDelivery)
+                </td>
+            </tr>
+        }
+    </table>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Book Rider" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        flatpickr("#PickUpDate", {
+            dateFormat: 'j/n/Y',
+            minDate: "today",
+            maxDate: new Date().fp_incr(3)
+        });
+
+        $('#form1').submit(function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            var pickUpDate = $("#PickUpDate").val();
+            //var date = pickUpDate.split('/');
+            //var currDate = new Date();
+            //var year = currDate.getFullYear() - 18;
+
+            if (pickUpDate == "") {
+                document.getElementById('ErrorDate').style.visibility = "visible";
+                document.getElementById("ErrorDate").innerHTML = "This field is required. Kindly input a pick-up date.";
+            }
+            else {
+                _this.unbind('submit').submit();
+            }
+        });
+    });
+</script>

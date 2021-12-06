@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PCartWeb.Models.EWalletHistory>
+
+@{
+    ViewBag.Title = "ViewEwalletHistory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View E-Wallet History</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Action
+        </th>
+        <th>
+            Amount
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created_At)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Action)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "EwalletHistoryDetails", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

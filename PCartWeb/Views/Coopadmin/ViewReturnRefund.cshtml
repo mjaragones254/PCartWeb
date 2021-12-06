@@ -1,0 +1,87 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewReturnRefundList>
+
+@{
+    ViewBag.Title = "ViewReturnRefund";
+}
+
+<div class="container-fluid">
+    <h2 style="margin: 25px 0 25px 0;">Order List</h2>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="~/Coopadmin/ViewOrderList" style="padding: 7px;">
+                <img src="~/Images/to pay.png" alt="to ship icon" height="30" class="d-inline-block align-text-top">
+                To Pay
+            </a>
+            <a class="navbar-brand" href="~/Coopadmin/ArrangePickUpList" style="padding: 7px;">
+                <img src="~/Images/to ship.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Arrange Pick Up
+            </a>
+            <a class="navbar-brand" href="~/Coopadmin/ToShipPage" style="padding: 7px;">
+                <img src="~/Images/to ship.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                To Ship
+            </a>
+            <a class="navbar-brand" href="#" style="padding: 7px;">
+                <img src="~/Images/to recieve.jpg" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                To Recieve
+            </a>
+            <a class="navbar-brand" href="~/Coopadmin/CompletedPage" style="padding: 7px;">
+                <img src="~/Images/completed.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Completed
+            </a>
+            <a class="navbar-brand" href="#" style="padding: 7px; background-color: darkgray; border-radius: 5px;">
+                <img src="~/Images/completed.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Return/Refund
+            </a>
+            <a class="navbar-brand" href="~/Coopadmin/CancelledPage" style="padding: 7px;">
+                <img src="~/Images/cancelled.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Cancelled
+            </a>
+        </div>
+    </nav>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UOrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefundAmount)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReturnId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UOrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefundAmount)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "ReturnRefundDetails", new {  id = item.ReturnId }) 
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

@@ -1,0 +1,44 @@
+﻿@model PCartWeb.Models.AddProdImageViewModel
+
+@{
+    ViewBag.Title = "AddProductImage";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+
+@using (Html.BeginForm("AddProductImage", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container form-horizontal custom-form-1 custom-container w-75">
+        <h4 class="w-100 bg-dark py-3 text-center">Add Product Image</h4>
+        <hr />
+        @ViewBag.message
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <form>
+            <fieldset>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product_image, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-10">
+                        <input class="form-control" name="ImageFile" type="file" id="formFile">
+                        @ViewBag.ErrorMessage
+                        @Html.ValidationMessageFor(model => model.ImageFile, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

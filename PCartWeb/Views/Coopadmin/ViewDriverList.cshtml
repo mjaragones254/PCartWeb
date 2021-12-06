@@ -1,0 +1,76 @@
+﻿@model IEnumerable<PCartWeb.Models.DriverDetailsModel>
+
+@{
+    ViewBag.Title = "ViewDriverList";
+}
+
+<h2>Driver List</h2>
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<p>
+    @Html.ActionLink("Create New", "CreateDriver")
+</p>
+
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.Firstname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlateNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Firstname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created_at)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated_at)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditDriver", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

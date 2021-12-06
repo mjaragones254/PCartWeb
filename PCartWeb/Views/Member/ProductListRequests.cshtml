@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewListProd>
+
+@{
+    ViewBag.Title = "ProductListRequests";
+}
+
+<h2>Product List Requests</h2>
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<p>
+    @Html.ActionLink("Request Product", "AddProduct")
+</p>
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.Product_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_manufact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product_price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_manufact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_cost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created_at)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

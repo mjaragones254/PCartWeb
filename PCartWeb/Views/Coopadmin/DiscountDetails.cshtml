@@ -1,0 +1,101 @@
+﻿@model PCartWeb.Models.EditProductDiscount
+
+@{
+    ViewBag.Title = "DiscountDetails";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        .custom-ml {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="">
+    <div class="container form-horizontal custom-form-1 custom-container w-100">
+        <h4 class="w-100 bg-dark py-3 text-center">Discount Details</h4>
+        <hr />
+
+        <p><b>Discount Name:</b> @Html.DisplayFor(model => model.Discount.Name)</p>
+        <p><b>Discount Percent:</b> @Html.DisplayFor(model => model.Discount.Percent)</p>
+        <p><b>Date Start:</b> @Html.DisplayFor(model => model.Discount.DateStart)</p>
+        <p><b>Date End:</b> @Html.DisplayFor(model => model.Discount.DateEnd)</p>
+
+        <p class="text-danger" style="display: none" id="Error"></p>
+        <div class="table-responsive table-hover">
+            <table class="table">
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Cost</th>
+                    <th>Price</th>
+                    <th>Expiry Date</th>
+                    <th>Manufacturer</th>
+                </tr>
+                @foreach (var item in Model.Product)
+                {
+                    foreach (var price in Model.Price)
+                    {
+                        if (price.ProdId == item.Id)
+                        {
+                            foreach (var cost in Model.Cost)
+                            {
+                                if (cost.ProdId == item.Id)
+                                {
+                                    foreach (var manu in Model.Manufacturer)
+                                    {
+                                        if (manu.ProdId == item.Id)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <img src="@Url.Content("~/Images/"+item.Product_image)" class="card-img-top" height="50" width="30" alt="...">
+                                                </td>
+                                                <td>
+                                                    <p>@item.Product_Name</p>
+                                                </td>
+                                                <td>
+                                                    <p>@item.Product_qty</p>
+                                                </td>
+                                                <td>
+                                                    <p>&#8369; @cost.Cost</p>
+                                                </td>
+                                                <td>
+                                                    <p>&#8369; @price.Price</p>
+                                                </td>
+                                                <td>
+                                                    <p>&#8369; @item.DiscountedPrice</p>
+                                                </td>
+                                                <td>
+                                                    <p>@item.ExpiryDate</p>
+                                                </td>
+                                                <td>
+                                                    <p>@manu.Manufacturer</p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            </table>
+        </div>
+        @Html.ActionLink("Back to List", "ViewListDiscount")
+    </div>
+</div>
+
+

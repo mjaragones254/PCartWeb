@@ -1,0 +1,116 @@
+﻿@model PCartWeb.Models.ReturnView
+
+@{
+    ViewBag.Title = "CompleteOrderDetails";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css">
+</head>
+
+@using (Html.BeginForm())
+{
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Subtotal
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.CustomerOrder)
+        {
+            <tr>
+                <td>
+                    <input name="isCheck" type="checkbox" class="check" value="@item.ProdOrderId" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdName)
+                </td>
+                <td>
+                    <img src="@Url.Content("~/Images/"+item.Image)" width="150" height="150" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subtotal)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+    <div class="container">
+        <div class="custom-form-1" id="center" style="margin: 5% 0 5% 0">
+            <form>
+
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Kindly Choose:</legend>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="refund" aria-label="Radio button" name="return" value="Return" checked>
+                                <label class="form-check-label" for="return">Return and Refund</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="refund" aria-label="Radio button" name="return" value="Refund Only">
+                                <label class="form-check-label" for="refund">Refund Only </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group row">
+                    <label for="refundAmount" class="col-sm-2 col-form-label">Refund Amount</label>
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" name="refundAmount" placeholder="Enter amount">
+                    </div>
+                </div>
+
+                <input type="hidden" value="@Model.UOrderId" name="orderid" />
+
+                <div class="form-group row">
+                    <label for="reason" class="col-sm-2 col-form-label">Kindly state the reason</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" rows="5" name="description" placeholder="Please provide the details"></textarea>
+                    </div>
+                </div>
+
+
+                @*<div class="form-group row">
+                    <label for="file" class="col-sm-2 col-form-label">Upload Images</label>
+                    <div class="col-sm-6">
+                        <input id="input-2" name="input2[]" type="file" class="file" data-show-upload="false" data-show-caption="true" multiple>
+                    </div>
+                </div>*@
+
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-primary">Request</button>
+                        <button type="submit" class="btn btn-primary">Back</button>
+                    </div>
+                </div>
+                @Html.ActionLink("Back to List", "MyOrders")
+            </form>
+        </div>
+    </div>
+}

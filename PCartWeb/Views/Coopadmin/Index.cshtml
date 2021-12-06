@@ -1,0 +1,174 @@
+﻿@using PCartWeb.Models
+@model dynamic
+@{
+    ViewBag.Title = "Index";
+    var ewallet = "";
+    var membern = "";
+    var productn = "";
+    var comm = "";
+    var coopname = "";
+    var fullname = "";
+    var contact = "";
+    var email = "";
+    foreach (UserViewModel am in Model.Userview)
+    {
+        fullname = am.Firstname + " " + am.Lastname;
+        contact = am.Contact;
+        coopname = am.Firstname;
+        ewallet = am.Ewallet.ToString();
+        membern = am.MembersNum.ToString();
+        productn = am.ProductNum.ToString();
+        comm = am.Commission.ToString();
+        email = am.Email;
+    }
+}
+
+<div class="container">
+    <h2 style="margin: 25px 0 25px 0;">@coopname</h2>
+
+    <div class="container-fluid" style="padding: 20px; margin: 20px; border: solid 10px steelblue; border-radius: 5px;">
+        <div class="row gx-5">
+            <div class="col px-md-4">
+                <h4>Pcart E-Wallet</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Amount: <b>₱ <a>@ewallet</a></b>
+            </div>
+            <div class="col-md-2">
+                <b><a href="#" data-toggle="modal" data-target="#exampleModal"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw via Paypal</a></b>
+            </div>
+            <div class="col-md-2">
+                <b><a href="#" data-toggle="modal" data-target="#exampleModal2"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw via Remittance</a></b>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col px-md-4">
+                <b>Status:</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Members: <a>@membern</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Products: <a>@productn</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Commission Rate: <a>@comm</a> %
+            </div>
+        </div>
+    </div>
+
+    <h4>Existing Products</h4>
+    <hr />
+
+
+    <div class="container">
+        <div class="row" id="row1">
+            @foreach (ProductDetailsModel prod in Model.Productview)
+            {
+                foreach (PriceTable price in Model.Price)
+                {
+                    if (price.ProdId == prod.Id)
+                    {
+                        <div class="col-xl-3 col-md-10">
+                            <div class="card shadow p-3 mb-5 bg-body rounded">
+                                <img src="@Url.Content("~/Images/"+prod.Product_image)" class="card-img-top" height="200" alt="...">
+                                <ul class="list-group list-group-flush">
+                                    @if (prod.DiscountedPrice != 0)
+                                    {
+                                        <li class="list-group-item" style="background-color: steelblue; text-decoration: line-through; color: white;">@price.Price</li>
+                                        <li class="list-group-item" style="background-color: steelblue; color: white;">@prod.DiscountedPrice</li>
+                                        <li class="list-group-item" style="background-color: steelblue; color: white;">@(((price.Price - prod.DiscountedPrice) / price.Price) * 100)&percnt; OFF</li>
+                                    }
+                                    else
+                                    {
+                                        <li class="list-group-item" style="background-color: steelblue; color: white;">@price.Price</li>
+                                    }
+                                </ul>
+                                <button class="card-body btn btn-light" onclick="location.href = '@Url.Action("ProdDetails", "Coopadmin", new { id = prod.Id })'">
+                                    <h5 class="card-title">@prod.Product_Name</h5>
+                                    <p class="card-text">@prod.Product_desc</p>
+                                </button>
+                            </div>
+                            <br />
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm())
+{
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Withdraw Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input name="name" placeholder="Representative's Fullname" type="text" value="@fullname" class="form-control" required />
+                </div>
+                <div class="modal-body">
+                    <input name="email" placeholder="Paypal email" type="email" value="@email" required class="form-control" min="1" />
+                </div>
+                <div class="modal-body">
+                    <input name="amount" placeholder="Request amount" type="number" class="form-control" pattern="[0-9]{6}" required min="1" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" name="paypal" value="Request" type="submit" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- ------------- if it is a remittance method -->
+@using (Html.BeginForm())
+{
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Withdraw Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input name="amount" placeholder="Request amount" type="number" value="" class="form-control" pattern="[0-9]{6}" required min="1" />
+                </div>
+                <div class="modal-body">
+                    <select name="select" required class="form-control">
+                        <option value="">Please Select</option>
+                        <option value="Cebuana Lhuillier">Cebuana Lhuillier</option>
+                        <option value="M Lhuillier">M Lhuillier</option>
+                        <option value="Palawan Express">Palawan Express</option>
+                    </select>
+                </div>
+                <div class="modal-body">
+                    <input name="name" placeholder="Representative's Fullname" type="text" value="@fullname" class="form-control" required />
+                </div>
+                <div class="modal-body">
+                    <input name="contact" placeholder="Representative's Contact Number" type="tel" pattern="[0-9]{11}" value="@contact" required class="form-control" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" name="remittance" value="Request" type="submit" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

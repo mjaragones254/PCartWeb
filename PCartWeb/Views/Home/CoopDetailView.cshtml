@@ -1,0 +1,101 @@
+﻿@model PCartWeb.Models.CoopMembershipDetails
+
+@{
+    ViewBag.Title = "CoopDetailView";
+    string form = "";
+    if (Model.CoopDetails.MembershipForm != null)
+    {
+        form = Model.CoopDetails.MembershipForm.Replace("~/Documents", "");
+    }
+
+}
+
+<h2>CoopDetailView</h2>
+
+<div>
+    <h4>CoopAdminViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopDetails.MembershipForm)
+        </dt>
+
+        <dd>
+            @if (Model.CoopDetails.MembershipForm == null)
+            {
+                <p>Please wait for the membership form to be posted. We are sorry for the inconvenience.</p>
+            }
+            else
+            {
+                <p>Download this link</p>
+                @Html.ActionLink(form, "Download", new { fileName = Model.CoopDetails.MembershipForm })
+            }
+        </dd>
+
+        @if (Model.MemFee != 0 || Model.MemFee.ToString() != null)
+        {
+            <dd>
+                Membership Fee
+            </dd>
+
+            <dd>
+                @Html.DisplayFor(model => model.MemFee)
+            </dd>
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopDetails.CoopName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopDetails.CoopName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopDetails.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopDetails.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopDetails.Contact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopDetails.Contact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CoopAdminDetails.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopAdminDetails.Email)
+        </dd>
+
+        <dt>
+            Contact Person
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CoopAdminDetails.Firstname) @Html.DisplayFor(model => model.CoopAdminDetails.Lastname)
+        </dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm("ApplyMembership", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>You can still update the membership form by uploading.</p>
+    @Html.HiddenFor(model => model.CoopAdminDetails.Coop_code, new { @value = Model.CoopAdminDetails.Coop_code })
+    <input type="file" name="DocFile" />
+    <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+    <button class="btn btn-outline-secondary" type="submit">Upload</button>
+}
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

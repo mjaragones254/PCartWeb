@@ -1,0 +1,93 @@
+﻿@model PCartWeb.Models.CompalintsModel
+
+@{
+    ViewBag.Title = "ContactUs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ContactUs</h2>
+@ViewBag.Message
+@using (Html.BeginForm("SendComplaints", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Your email address (Kindly make sure that it is active.)</span>
+            </div>
+            <textarea class="form-control" name="Email" required aria-label="With textarea"></textarea>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Full Name</span>
+            </div>
+            <textarea class="form-control" name="Fullname" required aria-label="With textarea"></textarea>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Concern Category</span>
+            </div>
+            <select class="custom-select" id="Category" name="Category">
+                <option value="">-----</option>
+                <option value="System Related">System Related</option>
+                <option value="COOP Related">COOP Related</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Reason for complaint (Choose a concern category first.)</span>
+            </div>
+            <select class="custom-select" id="Reason" name="Reason">
+                <option value="">-----</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description</span>
+            </div>
+            <textarea class="form-control" name="Description" required aria-label="With textarea"></textarea>
+        </div>
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" name="File" class="custom-file-input" id="inputGroupFile02">
+                <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Send" name="submit" />
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#Category').on('change', function () {
+            var cat = this.value;
+
+            if (cat == "System Related") {
+                var newOptions = {
+                    "Option 1": "value1"
+                };
+
+                var $el = $("#Reason");
+                $('#Reason option:gt(0)').remove();
+                $.each(newOptions, function (key, value) {
+                    $el.append($("<option></option>")
+                        .attr("value", value).text(key));
+                });
+            }
+            else {
+                var newOptions = {
+                    "Option 2": "value12"
+                };
+
+                var $el = $("#Reason");
+                $('#Reason option:gt(0)').remove();
+                $.each(newOptions, function (key, value) {
+                    $el.append($("<option></option>")
+                        .attr("value", value).text(key));
+                });
+            }
+        });
+    });
+</script>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

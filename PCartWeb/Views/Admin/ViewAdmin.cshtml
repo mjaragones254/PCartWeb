@@ -1,0 +1,170 @@
+﻿@model PCartWeb.Models.CoopViewModel
+
+@{
+    ViewBag.Title = "ViewAdmin";
+}
+
+<div>
+    <h2 style="margin: 25px 0; text-align: center;">COOP Admin Details</h2>
+
+    <div class="row">
+        <div class="col-md text-center">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Image) </b>
+            </p>
+            <p>
+                <img src="@Url.Content(Model.Image)" width="150" height="150" />
+            </p>
+            <p>
+                <b>Coop Name: </b> @Html.DisplayFor(model => model.CoopName)
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.CoopAddress) : </b>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.CoopAddress)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Address) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>
+                @Html.DisplayFor(model => model.Address)
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.CoopContact) : </b>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.CoopContact)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Bdate) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>
+                @Html.DisplayFor(model => model.Bdate)
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Email) : </b>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.Email)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Gender) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>
+                @Html.DisplayFor(model => model.Gender)
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p><b> @Html.DisplayNameFor(model => model.Firstname) : </b></p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.Firstname)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.CStatus) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>@Html.DisplayFor(model => model.CStatus)</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p><b> @Html.DisplayNameFor(model => model.Lastname) : </b></p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.Lastname)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b> @Html.DisplayNameFor(model => model.Created_at) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>@Html.DisplayFor(model => model.Created_at)</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <p></p>
+        </div>
+        <div class="col-md-2">
+            <p><b> @Html.DisplayNameFor(model => model.Contact) : </b></p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                @Html.DisplayFor(model => model.Contact)
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                <b>@Html.DisplayNameFor(model => model.Updated_at) : </b>
+            </p>
+        </div>
+        <div class="col-md">
+            <p>@Html.DisplayFor(model => model.Updated_at)</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md text-center">
+            <p>
+                <button type="button" onclick="location.href='@Url.Action("ApproveAccntReq", "Admin", new { id = Model.Id })'" class="btn btn-primary">Approve</button>
+                <button type="button" onclick="location.href='@Url.Action("RejectReqAccnt", "Admin", new { id = Model.Id })'" class="btn btn-warning">Reject</button>
+            </p>
+        </div>
+    </div>
+</div>

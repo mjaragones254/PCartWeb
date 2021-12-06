@@ -1,0 +1,90 @@
+﻿@model IEnumerable<PCartWeb.Models.OrderList>
+
+@{
+    ViewBag.Title = "ToShipOrders";
+}
+
+<div class="container-fluid">
+    <h2 style="margin: 25px 0 25px 0;">My Orders</h2>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="~/Home/MyOrders" style="padding: 7px;">
+                <img src="~/Images/to pay.png" alt="to ship icon" height="30" class="d-inline-block align-text-top">
+                To Pay
+            </a>
+            <a class="navbar-brand" href="#" style="padding: 7px; background-color: darkgray; border-radius: 5px;">
+                <img src="~/Images/to ship.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                To Ship
+            </a>
+            <a class="navbar-brand" href="~/Home/ToReceiveOrder" style="padding: 7px;">
+                <img src="~/Images/to recieve.jpg" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                To Recieve
+            </a>
+            <a class="navbar-brand" href="~/Home/CompleteOrder" style="padding: 7px;">
+                <img src="~/Images/completed.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Completed
+            </a>
+            <a class="navbar-brand" href="~/Home/CancelledOrder" style="padding: 7px;">
+                <img src="~/Images/cancelled.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Cancelled
+            </a>
+            <a class="navbar-brand" href="~/Home/ReturnRefundList" style="padding: 7px;">
+                <img src="~/Images/completed.png" alt="to ship icon" height="24" class="d-inline-block align-text-top">
+                Return/Refund
+            </a>
+        </div>
+    </nav>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderNo)
+                </th>
+                <th>
+                    Coop Shop
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Contact)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Delivery_fee)
+                </th>
+                <th>
+                    Mode of Payment
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalAmount)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contact)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Delivery_fee)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModeOfPay)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+                    <td>
+                        @Html.ActionLink("View Item(s)", "OrderDetails", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

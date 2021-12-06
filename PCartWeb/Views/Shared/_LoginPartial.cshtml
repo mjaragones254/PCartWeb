@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar navbar-" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (User.IsInRole("Admin"))
+        {
+            <ul class="nav justify-content-end">
+                <li class="nav-link">
+                    Hello, @User.Identity.GetUserName()!
+                </li>
+                    <li class="nav-link"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
+        }
+        else
+        {
+<ul class="nav justify-content-end">
+    @if (User.IsInRole("Non-member"))
+    {
+        <li class="nav-item">@Html.ActionLink("Be a Member?", "ViewListOfCoops", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+    }
+    @if (User.IsInRole("Non-member") || User.IsInRole("Member"))
+    {
+        <li class="nav-link">@Html.ActionLink("My Favourites", "WishlistDisplay", new { @class = "nav-link" })</li>
+        <li class="nav-link">@Html.ActionLink("My Orders", "MyOrders", new { @class = "nav-link" })</li>
+        <li class="nav-link">
+            @Html.ActionLink("Cart", "DisplayCart", new { @class = "nav-link" })
+        </li>
+    }
+    <li class="nav-link">
+        @Html.ActionLink("Hello!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+    </li>
+    <li class="nav-link"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+</ul>
+        }
+    }
+}
+else
+{
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            @Html.ActionLink("Register Your Coop", "RegisterCoopadmin", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Sign-Up", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })
+        </li>
+    </ul>
+    @*<ul class="nav justify-content-end">
+            <li class="nav-item">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="nav-item">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>*@
+}

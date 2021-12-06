@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PCartWeb.Models.DiscountViewModel>
+@using System.Globalization
+@{
+    ViewBag.Title = "List of Discounts";
+}
+
+<h4>@ViewBag.Title</h4>
+<hr />
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<p class="mt-3">
+    @Html.ActionLink("Create New", "ProductDiscounts")
+</p>
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Percent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateEnd)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Percent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateEnd)
+                </td>
+                <td>
+                    @{
+                        CultureInfo culture = new CultureInfo("es-ES");
+                        CultureInfo culture1 = new CultureInfo("es-ES");
+                        var datestart = DateTime.Parse(item.DateStart, culture);
+                        var dateend = DateTime.Parse(item.DateEnd, culture1);
+                    }
+                    @if (datestart <= DateTime.Now || dateend <= DateTime.Now)
+                    {
+                        @Html.ActionLink("Discount Details", "DiscountDetails", new { id = item.Id })
+                    }
+                    else
+                    {
+                        <p>
+                            @Html.ActionLink("Edit", "EditDiscount", new { id = item.Id }) |
+                            @Html.ActionLink("Discount Details", "DiscountDetails", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "DeleteDiscount", new { id = item.Id })
+                        </p>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

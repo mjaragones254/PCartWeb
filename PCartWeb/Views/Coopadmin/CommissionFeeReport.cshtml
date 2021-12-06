@@ -1,0 +1,52 @@
+﻿@model IEnumerable<PCartWeb.Models.CommissionSale>
+
+@{
+    ViewBag.Title = "CommissionFeeReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<h4 class="mt-3">Commission Fee Report</h4>
+<br />
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.UserOrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommissionFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserOrderID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommissionFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "OrderDetails", new { id = item.UserOrderID })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

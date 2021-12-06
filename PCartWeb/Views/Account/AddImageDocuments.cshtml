@@ -1,0 +1,42 @@
+﻿@model PCartWeb.Models.AddDocumentImages
+
+
+@using (Html.BeginForm("AddImageDocuments", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <head>
+        <link rel="stylesheet" href="~/Content/css/customStyle.css" />
+        <style>
+            h4 {
+                color: white;
+            }
+        </style>
+    </head>
+    <div class="container custom-form-1 custom-container">
+        <div class="form-horizontal">
+            <h4 class="w-100 bg-dark py-3 text-center">Upload Document Images</h4>
+            <hr />
+            <div class="form-horizontal">
+                <div class="alert alert-success" role="alert">
+                    Your account is successfully saved. Please provide your documents below.
+                </div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Document_image, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control" name="ImageFile" type="file" id="formFile">
+                        @Html.ValidationMessageFor(model => model.Document_image, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Upload" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,104 @@
+﻿@model PCartWeb.Models.ReturnRefundDetails
+
+@{
+    ViewBag.Title = "ReturnRefundDetails";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css" />
+    <style>
+        h4 {
+            color: white;
+        }
+
+        .origprice {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Order Details</h4>
+        <hr />
+        <h5>Return Refund Details</h5>
+        <hr />
+        <p>Order No.: @Html.DisplayFor(modelItem => Model.ReturnRefunds.UserOrderId)</p>
+        <table class="table">
+            <tr>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Subtotal
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.RefundItem)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content("~/Images/" + item.ProdImage)" width="50" height="50" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProdName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @if (item.DiscountedPrice != 0)
+                        {
+                            <div class="price mt-1">
+                                <span class="origprice">
+                                    &#8369; @Html.DisplayFor(modelItem => item.Price)
+                                </span>
+                                &#8369; @Html.DisplayFor(modelItem => item.DiscountedPrice)
+                                @(((item.Price - item.DiscountedPrice) / item.Price) * 100)&percnt; OFF
+                            </div> <!-- price-wrap.// -->
+                        }
+                        else if (item.MemberDiscountedPrice != 0)
+                        {
+                            <div class="price mt-1">
+                                <span class="origprice">
+                                    &#8369; @Html.DisplayFor(modelItem => item.Price)
+                                </span>
+                                &#8369; @Html.DisplayFor(modelItem => item.MemberDiscountedPrice)
+                                @(((item.Price - item.MemberDiscountedPrice) / item.Price) * 100)&percnt; OFF
+                            </div> <!-- price-wrap.// -->
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Price)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubTotal)
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <p><b>Status:</b> @Html.DisplayFor(modelitem => Model.ReturnRefunds.Status)</p>
+        <p><b>Type:</b> @Html.DisplayFor(modelitem => Model.ReturnRefunds.Type)</p>
+        <p><b>Reason:</b> @Html.DisplayFor(modelitem => Model.ReturnRefunds.Reason) </p>
+        <p><b>Refund Amount:</b> @Html.DisplayFor(modelitem => Model.ReturnRefunds.RefundAmount) </p>
+
+        @if (Model.ReturnRefunds.DateAccepted == null)
+        {
+            <button onclick="location.href = '@Url.Action("AcceptReturn", "Coopadmin", new { id = Model.ReturnRefunds.Id })'" class="btn btn-primary">Accept</button>
+            <button onclick="location.href = '@Url.Action("RejectReturn", "Coopadmin", new { id = Model.ReturnRefunds.Id })'" class="btn btn-primary">Reject</button>
+        }
+
+    </div>
+</div>

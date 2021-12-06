@@ -1,0 +1,297 @@
+﻿@using PCartWeb.Models
+@model ViewCheckOutPage
+@{
+    ViewBag.Title = "CheckoutPage";
+    string id = "";
+    var idcoop = "";
+    List<string> vouchCode = new List<string>();
+    double? totEach = 0;
+    double? totEach2 = 0;
+    List<string> vouchcode = new List<string>();
+    List<CoopVouchers> voucherList = new List<CoopVouchers>();
+    
+
+    foreach (var d in Model.coopShops)
+    {
+        vouchcode.Add(d.VoucherCode);
+    }
+}
+<h2>Checkout</h2>
+<style>
+    .origprice {
+        text-decoration: line-through;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Address Details
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body" id="addressDetails"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Mode Of Payment
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body text-center">
+                            <select class="custom-select" id="select">
+                                <option value="Select">-Please Select-</option>
+                                <option value="E-Wallet">E-Wallet</option>
+                                <option value="Cash On Delivery">Cash On Delivery</option>
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var coopShop in Model.coopShops)
+                            {
+                                double? deliv2 = 0;
+                                deliv2 = coopShop.Delivery;
+
+                                if (coopShop.discountedTotalPrice != null)
+                                {
+                                    totEach2 = totEach2 + Convert.ToDouble(coopShop.discountedTotalPrice) + deliv2;
+                                }
+                                else
+                                {
+                                    totEach2 = totEach2 + Convert.ToDouble(coopShop.TotalEach) + deliv2;
+                                }
+                            }
+                            <button class="btn btn-primary" onclick="location.href = '@Url.Action("PaymentWithPayPal", "Paypal", new { money = totEach2, user_id = id, vouchcode = vouchcode })'">Pay Order with PayPal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <table class="table text-center">
+                <thead>
+                    <tr style="background-color: cornflowerblue;">
+                        <th colspan="6">Order Summary</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Image
+                        </th>
+                        <th>
+                            Item Name
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Subtotal
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                @using (Html.BeginForm())
+                {
+                    <tbody>
+
+                        @for (int i = 0; i < Model.coopShops.Count; i++)
+                        {
+                            <tr>
+                                <td colspan="5"><b>@Html.DisplayFor(modelItem => Model.coopShops[i].CoopName)</b> </td>
+                            </tr>
+                            double? deliv = 0;
+                            deliv = Model.coopShops[i].Delivery;
+                            string coopID = Model.coopShops[i].CoopID;
+
+                            for (int j = 0; j < Model.Products.Count; j++)
+                            {
+                                id = Model.Products[j].Userid;
+                                @Html.HiddenFor(modelItem => Model.coopShops[i].CoopID);
+                                <tr>
+                                    @if (Model.coopShops[i].CoopID == Model.Products[j].CoopID2)
+                                    {
+                                        <td><img src="@Url.Content("~/Images/" + Model.Products[j].Image)" width="100" height="100" /></td>
+                                        <td> @Html.DisplayFor(modelItem => Model.Products[j].ProdName) </td>
+                                        <td> @Html.DisplayFor(modelItem => Model.Products[j].Qty) </td>
+                                        <td>
+                                            @if (Model.Products[j].DiscountedPrice != 0)
+                                            {
+                                                <div class="price mt-1">
+                                                    <span class="origprice">
+                                                        &#8369; @Html.DisplayFor(modelItem => Model.Products[j].Price)
+                                                    </span>
+                                                    &#8369; @Html.DisplayFor(modelItem => Model.Products[j].DiscountedPrice)
+                                                    @(((Model.Products[j].Price - Model.Products[j].DiscountedPrice) / Model.Products[j].Price) * 100)&percnt; OFF
+                                                </div> <!-- price-wrap.// -->
+                                            }
+                                            else if (Model.Products[j].MemberDiscountedPrice != 0)
+                                            {
+                                                <div class="price mt-1">
+                                                    <span class="origprice">
+                                                        &#8369; @Html.DisplayFor(modelItem => Model.Products[j].Price)
+                                                    </span>
+                                                    <p>
+                                                        &#8369; @Html.DisplayFor(modelItem => Model.Products[j].MemberDiscountedPrice)
+                                                        @(((Model.Products[j].Price - Model.Products[j].MemberDiscountedPrice) / Model.Products[j].Price) * 100)&percnt; OFF
+                                                    </p>
+                                                </div> <!-- price-wrap.// -->
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => Model.Products[j].Price)
+                                            }
+                                        </td>
+                                        <td> @Html.DisplayFor(modelItem => Model.Products[j].Subtotal)</td>
+                                    }
+                                </tr>
+                            }
+
+                            idcoop = Model.coopShops[i].CoopID;
+
+                            <tr>
+                                <td colspan="5">
+                                    @if (Model.coopShops[i].voucherUsed != null)
+                                    {
+                                        <b>Voucher Code:</b> @Html.DisplayFor(modelItem => Model.coopShops[i].VoucherCode) <br />
+                                        <b>Voucher Used:</b> @Html.DisplayFor(modelItem => Model.coopShops[i].voucherUsed) <br />
+                                        <b>Delivery Fee:</b> @deliv <br />
+                                        <p><b>Partial Total:</b> <span class="origprice">@Model.coopShops[i].TotalEach</span> @Html.DisplayFor(modelItem => Model.coopShops[i].discountedTotalPrice) </p>
+                                    }
+                                    else
+                                    {
+                                        <b>Delivery Fee:</b> @deliv <br />
+                                        <b>Partial Total:</b> @Html.DisplayFor(modelItem => Model.coopShops[i].TotalEach)
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Voucher Code: </p>
+                                </td>
+                                <td colspan="3">
+                                    @if (Model.VouchersList != null)
+                                    {
+                                        foreach (var vl in Model.VouchersList)
+                                        {
+                                            if (vl.coopID.ToString() == Model.coopShops[i].CoopID)
+                                            {
+                                                voucherList.Add(new CoopVouchers
+                                                {
+                                                    Name = vl.Vouchers2.Name,
+                                                    DiscountType = vl.Vouchers2.DiscountType,
+                                                    Percent_Discount = vl.Vouchers2.Percent_Discount,
+                                                    UserType = vl.Vouchers2.UserType,
+                                                    VoucherCode = vl.Vouchers2.VoucherCode,
+                                                    VoucherDetails = vl.Vouchers2.VoucherDetails,
+                                                    Min_spend = vl.Vouchers2.Min_spend,
+                                                    ExpiryDate = vl.Vouchers2.ExpiryDate,
+                                                });
+                                            }
+                                        }
+
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(vm => Model.coopShops[i].VoucherCode, new SelectList(voucherList, "VoucherCode", "VoucherDetails"), "Select", htmlAttributes: new { @class = "form-control" })
+                                            </div>
+                                            <div class="text-danger">
+                                                @Model.coopShops[i].VoucherError
+                                            </div>
+                                        </div>
+
+                                        voucherList.Clear();
+                                    }
+                                </td>
+                                <td>
+                                    <input name="submit" type="submit" id="submit" value="Apply Voucher" class="btn btn-default" />
+                                </td>
+                                @if (Model.coopShops[i].VoucherCode != null)
+                                {
+                                    @Html.HiddenFor(modelItem => Model.coopShops[i].VoucherCode, new { htmlAttributes = new { @class = "form-control", @id = "voucherUsed" } })
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                }
+                <tbody>
+                    <tr>
+                        <td colspan="5">
+                            <div class="card w-100 text-lg-right" style="width: 18rem;">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <div id="checktotal">
+                                            @foreach (var coopShop in Model.coopShops)
+                                            {
+                                                double? deliv = 0;
+                                                deliv = coopShop.Delivery;
+
+                                                if (coopShop.discountedTotalPrice != null)
+                                                {
+                                                    totEach = totEach + Convert.ToDouble(coopShop.discountedTotalPrice) + deliv;
+                                                }
+                                                else
+                                                {
+                                                    totEach = totEach + Convert.ToDouble(coopShop.TotalEach) + deliv;
+                                                }
+                                            }
+                                            <input class='form-control' id="totEach" value="@totEach" placeholder='Total: @totEach' type='text' readonly>
+                                        </div>
+                                    </p>
+                                    <button onclick="PlaceOrder('@id')" class="btn btn-primary">Place Order</button>
+
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/AdminScript/Checkout.js"></script>
+<script>
+    function PlaceOrder(id) {
+        var select = $('#select').val();
+        var vouchCode = [];
+        var total = $('#totEach').val();
+
+        @foreach (var d in Model.coopShops)
+        {
+            @:vouchCode.push("@d.VoucherCode");
+        }
+
+        vouchCode = vouchCode.toString();
+
+        if (select == "Select") {
+            alert('Please select a payment method');
+        }
+        else {
+            $.post('../Home/PlaceYourOrder', {
+                total: total,
+                id: id,
+                vouchCode: vouchCode,
+                select: select,
+            }, function (data) {
+                if (data[0].mess == 1) {
+                    alert('Thank you for shopping!');
+                    window.location.href = "/Home/MyOrders";
+                }
+                else if (data[0].mess == 2) {
+                    alert("You don't have enough E-Wallet balance.");
+                }
+            });
+        }
+    }
+</script>

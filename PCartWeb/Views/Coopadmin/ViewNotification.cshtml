@@ -1,0 +1,84 @@
+﻿@model PCartWeb.Models.ViewNotification
+
+@{
+    ViewBag.Title = "ViewNotification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        a h6, a p {
+            color: black;
+            list-style: none;
+        }
+    </style>
+</head>
+
+<div class="container" style="margin-top: 20px;">
+    <div class="rounded bg-white mb-3" style="box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+        <div class="box-title border-bottom p-3 bg-light">
+            <h6 class="m-0">Notifications</h6>
+        </div>
+        <h6 style="margin-left: 20px; margin-top: 3px;">Unread</h6>
+        <div class="box-body p-0">
+            <div class="p-3">
+                @if (Model.Unread.Count() != 0)
+                {
+                    foreach (var item in Model.Unread)
+                    {
+                        <div>
+                            <a href="@item.NavigateURL" onclick="GetId('@item.Id', '@item.NavigateURL', event)">
+                                <h6>@item.NotifHeader</h6>
+                                <p>@item.NotifMessage</p>
+                                <p style="font-size: 12px;">@item.DateReceived</p>
+                            </a>
+                        </div>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <p>There are no new notification.</p>
+                }
+            </div>
+        </div>
+        <hr />
+        <h6 style="margin-left: 20px; margin-top: 3px;">Read</h6>
+        <div class="box-body p-0">
+            <div class="p-3">
+                @if (Model.Read.Count() != 0)
+                {
+                    foreach (var item in Model.Read)
+                    {
+                        <div>
+                            <a href="@item.NavigateURL">
+                                <h6>@item.NotifHeader</h6>
+                                <p>@item.NotifMessage</p>
+                                <p style="font-size: 12px;">@item.DateReceived</p>
+                            </a>
+                        </div>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <p>You haven't read any notification yet'.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function GetId(id, url, event) {
+        event.preventDefault();
+        $.post('../Coopadmin/NotifRead', {
+            id: id,
+        }, function (data) {
+            if (data[0].mess == 1) {
+                window.location.href = "/Coopadmin/" + url;
+            }
+        });
+    }
+</script>
+

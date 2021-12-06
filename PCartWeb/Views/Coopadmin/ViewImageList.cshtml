@@ -1,0 +1,78 @@
+﻿@model PCartWeb.Models.AddImagesVariationsModel
+
+@{
+    ViewBag.Title = "ViewImageList";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive tabe-hover w-75 mx-auto">
+    <table class="table table-bordered mt-4">
+        <tr class="bg-dark">
+            <th scope="col">
+                Product Images
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Images)
+        {
+            <tr>
+                <td scope="row">
+                    <img src="@Url.Content("~/Images/"+item.Product_image)" width="150" height="150" />
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteItemImage", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </table>
+</div>    
+<div style="margin-left:14%;">
+    <button type="button" onclick="location.href='@Url.Action("AddProductImage", "Coopadmin")'" class="btn btn-primary">Add Image</button>
+</div>
+   
+
+    <br />
+    @using (Html.BeginForm())
+    {
+        <div class="table-responsive">
+            @Html.ValidationMessageFor(model => Model.VarDesc, "", new { @class = "text-danger" }) <br />
+            @Html.ValidationMessageFor(model => Model.VarPrice, "", new { @class = "text-danger" })<br />
+            <p style="color: red;">@ViewBag.errorMessage</p>
+            <table class="table table-bordered">
+                <tr class="bg-dark">
+                    <th>Variation Descripton</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                @if (Model.Variations != null)
+                {
+                    foreach (var vari in Model.Variations)
+                    {
+                        <tr>
+
+                            <td>@Html.DisplayFor(modelItem => vari.Desc)</td>
+                            <td>@Html.DisplayFor(modelItem => vari.Price)</td>
+                            <td>@Html.ActionLink("Delete", "DeleteVariation", new { id = vari.Id, prodid = vari.ProdId })</td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td>@Html.EditorFor(model => model.VarDesc, new { htmlAttributes = new { placeholder = "Description", @class = "form-control" } })</td>
+                    <td>@Html.EditorFor(model => model.VarPrice, new { htmlAttributes = new { placeholder = "Price", @class = "form-control" } })</td>
+                    <td><input class="btn btn-outline-primary" value="Create" type="submit" /></td>
+                </tr>
+            </table>
+            <br />
+            <button type="button" class="btn btn-success" onclick="location.href = '@Url.Action("ViewListProduct", "Coopadmin")'">Return to Home</button>
+        </div>
+
+    }

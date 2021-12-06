@@ -1,0 +1,95 @@
+﻿@model PCartWeb.Models.ViewCoopHomePage
+
+@{
+    ViewBag.Title = "ViewCoop";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+</head>
+
+<div class="container">
+    <div class="row custom-form-1 mt-3 w-50">
+        <div class="col">
+            <h2>@Model.Coop.CoopName</h2>
+            <button type="button" onclick="location.href = '@Url.Action("CoopChat", "Home", new { id = Model.Coop.Id })'" class="btn btn-primary mt-1">Chat COOP</button>
+        </div>
+    </div>
+
+    <h4 class="mt-5">Vouchers</h4>
+    <hr />
+
+    <div class="container">
+        <div class="row" id="row1">
+            @foreach (var voucher in Model.Vouchers)
+            {
+                <div class="col-xl-3 col-md-10">
+                    <div class="card shadow p-3 mb-5 bg-body rounded">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" style="background-color: steelblue; color: white;">@voucher.Name</li>
+                            @if (voucher.DiscountType == "Percent")
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">@voucher.Percent_Discount &percnt; OFF</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">PHP @voucher.Percent_Discount OFF</li>
+                            }
+
+                            @if (voucher.UserType == "Member")
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">For COOP Members only</li>
+                            }
+                            else if (voucher.UserType == "Non-Member")
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">For Non-Members only</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">For COOP Members and Non-Members</li>
+                            }
+                            <li class="list-group-item" style="background-color: steelblue; color: white;">Code: @voucher.VoucherCode</li>
+                            <li class="list-group-item" style="background-color: steelblue; color: white;">Minimum Spent: @voucher.Min_spend</li>
+                            <li class="list-group-item" style="background-color: steelblue; color: white;">Expiry Date: @voucher.ExpiryDate</li>
+                        </ul>
+                    </div>
+                    <br />
+                </div>
+            }
+        </div>
+    </div>
+
+    <h4>Existing Products</h4>
+    <hr />
+
+    <div class="container">
+        <div class="row" id="row1">
+            @foreach (var prod in Model.Products)
+            {
+                <div class="col-xl-3 col-md-10">
+                    <div class="card shadow p-3 mb-5 bg-body rounded">
+                        <img src="@Url.Content("~/Images/"+prod.Product_image)" class="card-img-top" height="200" alt="...">
+                        <ul class="list-group list-group-flush">
+                            @if (prod.DiscountPrice != 0)
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; text-decoration: line-through; color: white;">@prod.Product_price</li>
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">@prod.DiscountPrice</li>
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">@(@prod.Product_price / @prod.Product_price - @prod.DiscountPrice))&percnt; OFF</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item" style="background-color: steelblue; color: white;">@prod.Product_price</li>
+                            }
+                        </ul>
+                        <button class="card-body btn btn-light" onclick="location.href = '@Url.Action("ProdDetails", "Coopadmin", new { id = prod.Id })'">
+                            <h5 class="card-title">@prod.Product_name</h5>
+                            <p class="card-text">@prod.Product_desc</p>
+                        </button>
+                    </div>
+                    <br />
+                </div>
+            }
+        </div>
+    </div>
+ 
+</div>

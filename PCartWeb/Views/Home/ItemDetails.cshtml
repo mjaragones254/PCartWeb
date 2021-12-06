@@ -1,0 +1,427 @@
+﻿@model PCartWeb.Models.HomeDisplayModel
+
+@{
+    ViewBag.Title = "ItemDetails";
+    int totimage = 0;
+    if (Model.Images != null)
+    {
+        foreach (var img in Model.Images)
+        {
+            totimage++;
+        }
+    }
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="max-age=604800" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Style/StyleSheet.css" rel="stylesheet" />
+    <link href="~/Style/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+    <link href="~/Style/ui.css" rel="stylesheet" />
+    <style>
+        .origprice {
+            text-decoration: line-through;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+
+        .container2 {
+            position: relative;
+        }
+        /* Hide the images by default */
+        .mySlides {
+            display: none;
+        }
+
+        /* Add a pointer when hovering over the thumbnail images */
+        .cursor {
+            cursor: pointer;
+        }
+
+        /* Next & previous buttons */
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 40%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+            /* On hover, add a black background color with a little bit see-through */
+            .prev:hover,
+            .next:hover {
+                background-color: #fff;
+            }
+
+        /* Number text (1/3 etc) */
+        .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+        }
+
+        /* Container for image text */
+        .caption-container2 {
+            text-align: center;
+            background-color: #222;
+            padding: 2px 16px;
+            color: white;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Six columns side by side */
+        .column {
+            float: left;
+            width: 16.66%;
+        }
+
+        /* Add a transparency effect for thumnbail images */
+        .demo {
+            opacity: 0.6;
+        }
+
+            .active,
+            .demo:hover {
+                opacity: 1;
+            }
+    </style>
+</head>
+
+
+<div class="media flex-sm-row flex-column-reverse justify-content-between my-4 mx-5" id="center">
+    @if (Model.IsSuccess == true)
+    {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Successfully added to your Cart.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    }
+    @if (User.IsInRole("Member"))
+    {
+        <div class="col text-right">
+            <button class="btn btn-default" onclick="location.href = '@Url.Action("AddProduct","Member")'">Propose Product</button>
+        </div>
+    }
+    <div>
+
+    </div>
+</div>
+<!-- Full-width images with number text -->
+
+
+<h4 class="mb-0"><button class="btn btn-primary" onclick="location.href = '@Url.Action("ViewCoop","Home", new { coopID = Model.Prod.CoopID })'">View Coop</button></h4>
+<div class="container align-content-center w-100">
+    @using (Html.BeginForm())
+    {
+        <div class="container2" style="margin-bottom: 30px;">
+            @{ int i = 1; }
+            <div class="mySlides">
+                <div class="numbertext">@i / @totimage</div>
+                <div class="text-center"><img src="@Url.Content("~/Images/"+Model.Prod.Product_image)" style="width:25%"></div>
+
+            </div>
+            @if (Model.Images != null)
+            {
+                foreach (var image in Model.Images)
+                {
+                    { i++; }
+                    <div class="mySlides">
+                        <div class="numbertext">@i / @totimage</div>
+                        <div class="text-center"><img src="@Url.Content("~/Images/"+image.Product_image)" style="width:25%"></div>
+                    </div>
+                }
+            }
+            <!-- Next and previous buttons -->
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+
+            <!-- Thumbnail images -->
+            <div class="row">
+                @{ int j = 1; }
+                @if (Model.Images != null)
+                {
+                    foreach (var img2 in Model.Images)
+                    {
+                        <div class="column">
+                            <img class="demo cursor" src="@Url.Content("~/Images/"+img2.Product_image)" style="width:25%" onclick="currentSlide(@j)">
+                        </div>
+                        { j++; }
+                    }
+                }
+            </div>
+        </div>
+        <div class="card mb-3" id="center" style="max-width: 850px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="@Url.Content("~/Images/"+Model.Prod.Product_image)" class="card-img" alt="....">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-block">
+
+                        <h5 class="row card-title ml-3 my-3">@Model.Prod.Product_name</h5>
+
+                        <div class="row" id="padding-x">
+                            <div class="col-3 mt-3">
+                                <p>Variation</p>
+                            </div>
+                            <div class="col-3">
+                                <input type="submit" id="submit" class="col btn btn-outline-info" name="variation" value="Plain" />
+                            </div>
+
+                            @if (Model.Variations != null)
+                            {
+                                foreach (var variation in Model.Variations)
+                                {
+                                    <div class="col">
+                                        @if (Model.VarDesc == variation.Description)
+                                        {
+                                            <input type="submit" id="submit" class="col btn btn-info" name="variation" value="@variation.Description" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" id="submit" class="col btn btn-outline-info" name="variation" value="@variation.Description" />
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                        @if (Model.VarDesc != null)
+                        {
+                            <input type="hidden" name="desc" value="@Model.VarDesc" />
+
+                        }
+
+                        <div class="row" id="padding-x">
+                            <div class="col-4 mt-3">
+                                <p>Stocks on hand</p>
+                            </div>
+                            <div class="col-8">
+                                @if (Model.Prod.Product_qty == 0)
+                                {
+                                    <p class="col-sm-4">Out of Stock</p>
+                                }
+                                else
+                                {
+                                    <p class="col-sm-4">@Model.Prod.Product_qty</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="row" id="padding-x">
+                            <div class="col-4 mt-3">
+                                <p>Quantity</p>
+                            </div>
+                            <div class="col-8">
+                                @if (Model.Prod.Product_qty == 0)
+                                {
+                                    <input type="number" class="form-control col-sm-4" name="Qty" min="0" max="@Model.Prod.Product_qty" id="input1" value="0" placeholder="enter quantity" disabled>
+                                }
+                                else
+                                {
+                                    <input type="number" class="form-control col-sm-4" name="Qty" id="input1" min="1" max="@Model.Prod.Product_qty" value="1" placeholder="enter quantity">
+                                }
+                            </div>
+                            <p style="color:red">@ViewBag.errorMessage</p>
+                        </div>
+
+                        <div class="row" id="padding-x">
+                            <div class="col-4 mt-3">
+                                <p>Price</p>
+                                <input type="hidden" name="Price" value="@Model.Prod.Product_price" />
+                            </div>
+                            <div class="col-8">
+                                @if (Model.Prod.DiscountPrice != 0)
+                                {
+                                    <input type="hidden" value="@Model." />
+                                    <div class="col-sm-4">
+                                        <span class="origprice">
+                                            &#8369; @Html.DisplayFor(modelItem => Model.Prod.Product_price)
+                                        </span>
+                                        <div>
+                                            &#8369; @Model.Prod.DiscountPrice
+                                            @(((@Model.Prod.Product_price - @Model.Prod.DiscountPrice) / @Model.Prod.Product_price) * 100)&percnt; OFF
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    
+                                    <div class="col-sm-4">
+                                        &#8369; @Html.DisplayFor(modelItem => Model.Prod.Product_price)
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="row text-center" id="padding-x">
+                            @if (Model.Prod.Wish == true)
+                            {
+                                <img src="~/Images/heartred.png" style="cursor:pointer;" onclick="location.href='@Url.Action("AddToWish", "Home", new { id = Model.Prod.Id })'" class="img-fluid col-sm-1 ml-5">
+                                <p class="card-text mr-5 mt-3">Remove to Wishlist</p>
+                            }
+                            else
+                            {
+                                <img src="~/Images/heart.png" onclick="location.href='@Url.Action("AddToWish", "Home", new { id = Model.Prod.Id })'" style="cursor:pointer;" class="img-fluid col-sm-1 ml-5" />
+                                <p class="card-text mr-5 mt-3">Add to Wishlist</p>
+                            }
+                        </div>
+
+                        <div class="row text-center" id="padding-x">
+                            <div class="col mt-3">
+                                @if (Model.Prod.Product_qty == 0)
+                                {
+                                    <input type="submit" class="col-sm-5 btn btn-dark" value="Add To Cart" disabled />
+                                }
+                                else
+                                {
+                                    <input type="submit" class="col-sm-5 btn btn-dark" value="Add To Cart" />
+                                }
+                            </div>
+                            <div class="col mt-3">
+
+                            </div>
+                        </div>
+
+                        <div class="row" id="padding-x">
+                            <div class="col mb-3">
+                                <p class="card-text bg-light border-light mt-4 p-3">@Model.Prod.Product_desc</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =============================PRODUCT REVIEWS START HERE==============================-->
+    }
+    <div class="row w-100 mt-5">
+
+        <div class="row h-100 id=" margin-top"">
+
+            <div class="col-10 justify-content-center" id="center" style="text-align: justify;">
+                <div class="container">
+                    <h2>Product Reviews</h2>
+                    <table class="table table-striped" id="center" aria-label="reviews">
+                        <thead>
+                            <tr>
+                                <th id="center">Customer</th>
+                                <th id="center">Ratings</th>
+                                <th id="center">Product Review</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Reviews != null)
+                            {
+                                foreach (var review in Model.Reviews)
+                                {
+                                    <tr>
+                                        <td>@review.Name</td>
+                                        <td>@review.Rate out 5</td>
+                                        <td>@review.Description</td>
+                                        <td><span class="badge badge-pill badge-light">@review.Created_at</span></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <h6>There are no reviews yet.</h6>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setInputFilter(textbox, inputFilter) {
+        ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+            textbox.addEventListener(event, function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                } else {
+                    this.value = "";
+                }
+            });
+        });
+    }
+
+    setInputFilter(document.getElementById("input1"), function (value) {
+        return /^\d*$/.test(value);
+    });
+</script>
+
+<script>
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("demo");
+        var captionText = document.getElementById("caption");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+        captionText.innerHTML = dots[slideIndex - 1].alt;
+    }
+</script>

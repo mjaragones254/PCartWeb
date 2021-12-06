@@ -1,0 +1,60 @@
+﻿@model IEnumerable<PCartWeb.Models.DeliveryListDisplay>
+
+@{
+    ViewBag.Title = "DeliveryHistory";
+}
+
+<h2>Delivery History</h2>
+
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                Order No.
+            </th>
+            <th>
+                Customer
+            </th>
+            <th>
+                Total Amount
+            </th>
+            <th>
+                Contact
+            </th>
+            <th>
+                Date Delivered
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateDelivered)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

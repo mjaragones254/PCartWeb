@@ -1,0 +1,53 @@
+﻿@model IEnumerable<PCartWeb.Models.CoopDetailsModel>
+
+@{
+    ViewBag.Title = "ViewListOfCoops";
+}
+
+<h4>List Of Coops</h4>
+<hr />
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.CoopName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Coop_Created)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoopName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coop_Created)
+                </td>
+                <td>
+                    @Html.ActionLink("View Coop", "CoopDetailView", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

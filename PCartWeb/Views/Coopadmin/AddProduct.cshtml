@@ -1,0 +1,158 @@
+﻿@model PCartWeb.Models.AdminAddProductViewModel
+
+@{
+    ViewBag.Title = "AddProduct";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("AddProduct", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container form-horizontal custom-form-1 custom-container w-75">
+        <h4 class="w-100 bg-dark py-3 text-center">Add Product</h4>
+        <h5></h5>
+        @ViewData["ErrorMessage"]
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_image, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                <input class="form-control" name="ImageFile" type="file" id="formFile">
+                @ViewBag.ErrorMessage
+                @Html.ValidationMessageFor(model => model.ImageFile, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(vm => vm.CategoryId, Model.Categorylist, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_name, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product_name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_desc, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_desc, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_manufact, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_manufact, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product_manufact, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExpiryDate, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                <input type="date" id="ExpiryDate" name="ExpiryDate" class="form-control" placeholder="dd/mm/yyyy" />
+                <p class="text-danger" style="display: none" id="ErrorDate"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_qty, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_qty, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product_qty, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_cost, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_cost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product_cost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_price, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Product_price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product_price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save and Next" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "ViewListProduct")
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        flatpickr("#ExpiryDate", {
+            dateFormat: 'j/n/Y',
+            minDate: "today",
+        });
+
+        $('#form1').submit(function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            var expiryDate = $("#ExpiryDate").val();
+            var date = expiryDate.split('/');
+            var currDate = new Date();
+            var year = currDate.getFullYear();
+            var month = currDate.getMonth() + 1;
+            var day = currDate.getDate();
+
+            if (date[0] <= day && date[1] == month && date[2] <= year) {
+                document.getElementById('ErrorDate').style.display = "block";
+                document.getElementById("ErrorDate").innerHTML = "Your product is already expire. Please do not sell expired goods.";
+            }
+            else {
+                _this.unbind('submit').submit();
+            }
+        });
+    });
+</script>
+<script>
+    function setInputFilter(textbox, inputFilter) {
+        ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+            textbox.addEventListener(event, function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                } else {
+                    this.value = "";
+                }
+            });
+        });
+    }
+
+    setInputFilter(document.getElementById("Product_qty"), function (value) {
+        return /^\d*$/.test(value);
+    });
+</script>

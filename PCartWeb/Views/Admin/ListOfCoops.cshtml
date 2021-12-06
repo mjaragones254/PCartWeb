@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PCartWeb.Models.CoopDetailsModel>
+
+@{
+    ViewBag.Title = "ListOfCoops";
+}
+
+<h4>List of Coops</h4>
+<hr />
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.CoopName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Coop_Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Coop_Updated)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoopName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coop_Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coop_Updated)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "DetailsCoopReq", new { id = item.Id }) |
+                    @if (item.IsLocked == "Unlock")
+                    {
+                        @Html.ActionLink("Lock", "LockCoop", new { id = item.Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Unlock", "UnlockCoop", new { id = item.Id })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

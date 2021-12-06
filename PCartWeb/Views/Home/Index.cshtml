@@ -1,0 +1,219 @@
+﻿@model PCartWeb.Models.HomeDisplayModel
+
+@{
+    ViewBag.Title = "DisplayItems";
+}
+<head>
+    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+    <link href="~/Style/ui.css" rel="stylesheet" />
+    <link href="~/Style/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+    <style>
+        .origprice {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#prodname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Home/Autocomplete",
+                    type: "POST",
+                    dataType: "json",
+                    data: { prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Product_Name, value: item.Product_Name };
+                        }))
+                    },
+                    error: function () {
+                        alert('something went wrong !');
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+
+</script>
+<br />
+@using (Html.BeginForm())
+{
+    if (User.IsInRole("Member") || User.IsInRole("Non-member"))
+    {
+        if (Model.RequestStatus == true)
+        {
+            <div class="alert alert-warning" role="alert">
+                Your membership request has been granted, please click this @Html.ActionLink("link", "ProceedToPayment") to pay for the membership fee.
+            </div>
+        }
+        if (Model.IsSuccess == true)
+        {
+
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Successfully added to your Cart.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            { Session["SuccessMessage"] = null; }
+        }
+        <div class="container-fluid" style="padding: 20px; margin: 20px 0 30px 0; border: solid 10px steelblue; border-radius: 5px;">
+            <div class="row gx-5">
+                <div class="col px-md-4">
+                    <h4>Pcart E-Wallet</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col px-md-5">
+                    Amount: <b>₱ <a>@Model.CustomerEwallet.Balance</a></b>
+                </div>
+                <div class="col-md-2">
+                    <b><a href="#" data-toggle="modal" data-target="#exampleModal"><img src="~/Images/top-up.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Top-Up</a></b>
+                </div>
+            </div>
+        </div>
+    }
+
+    <nav class="navbar navbar-main navbar-expand-lg navbar-light">
+        <div class="container">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav" aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="main_nav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <input class="nav-link" value="All Categories" type="submit" name="submit" id="submit" style="border:none; cursor: pointer; background-color: white;" />
+                    </li>
+                    @if (Model.Categories != null)
+                    {
+                        int i;
+                        for (i = 0; i < Model.Categories.Count; i++)
+                        {
+                            <li class="nav-item">
+                                <input class="nav-link" type="submit" value="@Model.Categories[i].Name" name="submit" style="border:none; cursor: pointer; background-color: white;" />
+                            </li>
+                        }
+                    }
+                </ul>
+            </div> <!-- collapse .// -->
+        </div> <!-- container .// -->
+    </nav>
+    <section class="section-name  padding-y-sm">
+        <header class="section-heading">
+            <div class="row">
+                <div class="col-sm">
+                    <h3 class="section-title">Popular products</h3>
+                </div>
+                <div class="col-sm">
+                    <input type="text" class="form-control" value="" id="prodname" name="prodname" placeholder="Search" />
+                </div>
+                <div class="col-sm">
+                    <input type="submit" class="btn btn-default my-2 my-sm-0" value="Search" name="submit" />
+                </div>
+            </div>
+            <script>
+                $("#prodname").autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '@Url.Action("Autocomplete", "Home")',
+                            dataType: "json",
+                            data: { prefix: $("#prodname").val() },
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return { label: item.Product_Name, value: item.Product_Name };
+                                }));
+                            },
+                            error: function (xhr, status, error) {
+                                alert("Error");
+                            }
+                        });
+                    }
+                });
+            </script>
+
+        </header><!-- sect-heading -->
+        <div class="container">
+            <!-- ========================= PRODUCT ITEMS STARTS HERE  ========================= -->
+            <div class="row">
+                @foreach (var item in Model.ListProds)
+                {
+                    <div class="col-md-3">
+                        <div class="card card-product-grid">
+                            <div class="card-body">
+                                <div href="#" onclick="location.href = '@Url.Action("ItemDetails", "Home", new { id = item.Id })'">
+                                    <a href="#" class="img-wrap"> <img src="@Url.Content("~/Images/"+item.Product_image)"> </a>
+                                    <figcaption class="info-wrap">
+                                        <a href="#" class="title">@Html.DisplayFor(modelItem => item.Product_name)</a>
+                                        @if (item.DiscountPrice != 0)
+                                        {
+                                            <div class="price mt-1">
+                                                <span class="origprice">
+                                                    &#8369; @Html.DisplayFor(modelItem => item.Product_price)
+                                                </span>
+                                                &#8369; @Html.DisplayFor(modelItem => item.DiscountPrice)
+                                                @(((@item.Product_price - @item.DiscountPrice) / @item.Product_price) * 100)&percnt; OFF
+                                            </div> <!-- price-wrap.// -->
+                                        }
+                                        else
+                                        {
+                                            <div class="price mt-1">&#8369; @Html.DisplayFor(modelItem => item.Product_price)</div> <!-- price-wrap.// -->
+                                        }
+                                    </figcaption>
+                                </div>
+                                <div class="price mt-1">
+                                    @if (item.Product_qty == 0)
+                                    {
+                                        <p>Out of Stock</p>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("AddToCart", "Home", new { id = item.Id })" class="btn btn-info">Add to Cart</a>
+                                    }
+                                    @if (item.Wish == true)
+                                    {
+                                        <img src="~/Images/heartred.png" onclick="location.href='@Url.Action("AddToWishlist", "Home", new { id = item.Id })'" style="cursor:pointer;" height="25" width="25" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/heart.png" onclick="location.href='@Url.Action("AddToWishlist", "Home", new { id = item.Id })'" style="cursor:pointer;" height="25" width="25" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- col.// -->
+                }
+            </div> <!-- col.// -->
+        </div> <!-- row.// -->
+        <!-- container // -->
+    </section>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">E-Wallet Top-Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input name="amount" type="number" class="form-control" min="1" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="paysubmit" id="submit" class="btn btn-primary" value="Pay Load" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

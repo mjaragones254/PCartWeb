@@ -1,0 +1,38 @@
+﻿@model PCartWeb.Models.ExternalImages
+
+@{
+    ViewBag.Title = "EditProductImage";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("EditProductImage", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="container form-horizontal custom-form-1 custom-container w-75">
+        <h4 class="w-100 bg-dark py-3 text-center">Edit Product Image</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product_image, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                <input class="form-control" name="ImageFile" type="file" id="formFile">
+                @Html.ValidationMessageFor(model => model.Product_image, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

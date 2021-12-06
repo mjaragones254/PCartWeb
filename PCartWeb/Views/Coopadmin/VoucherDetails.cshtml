@@ -1,0 +1,88 @@
+﻿@model PCartWeb.Models.VoucherDetailsModel
+
+@{
+    ViewBag.Title = "VoucherDetails";
+}
+
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="container form-horizontal custom-form-1 custom-container w-100">
+    <h4 class="w-100 bg-dark py-3 text-center">Voucher Details</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VoucherCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VoucherCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiscountType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiscountType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Percent_Discount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Percent_Discount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Min_spend)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Min_spend)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateStart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateStart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpiryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpiryDate)
+        </dd>
+    </dl>
+</div> 
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

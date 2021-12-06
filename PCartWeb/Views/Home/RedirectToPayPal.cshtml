@@ -1,0 +1,13 @@
+﻿@model PCartWeb.Models.PaypalUrl
+
+@{
+    ViewBag.Title = "RedirectToPayPal";
+}
+
+<input value="@Model.url" id="url" type="hidden" />
+
+<script>
+    let url = $('#url').val();
+    alert(url);
+    window.location = url;
+</script>

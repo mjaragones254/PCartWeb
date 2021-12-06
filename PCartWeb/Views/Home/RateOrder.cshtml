@@ -1,0 +1,181 @@
+﻿@model IEnumerable<PCartWeb.Models.CoopProdOrder>
+
+@{
+    ViewBag.Title = "CompleteOrderDetails";
+}
+<style>
+    .starFade {
+        background-image: url('/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starFadeN {
+        background-image: url('/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+    .starGlow {
+        background-image: url('/Images/starglow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starGlowN {
+        background-image: url('/Images/starglow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+</style>
+<script>
+    function RateClick(r) {
+        $("#Rating").val(r);
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+
+        for (var i = r + 1; i <= 5; i++) {
+            $("#Rate" + i).attr('class', 'starFade');
+        }
+    }
+
+    function RateOver(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+    }
+
+    function RateOut(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starFade');
+        }
+    }
+
+    function RateSelected() {
+        var setRating = $("#Rating").val();
+        for (var i = 1; i <= setRating; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    <div class="table-responsive">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Review as Anonymous?</span>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <p style="color:red;">@ViewBag.ErrorMessage2</p>
+                <div class="input-group-text">
+                    <input type="radio" id="yes" aria-label="Radio button" name="anonymous" value="Yes">
+                    <label for="yes">Yes</label><br>
+                    <input type="radio" id="no" aria-label="Radio button" name="anonymous" value="No" />
+                    <label for="no">No</label><br>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProdName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Image)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Qty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subtotal)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProdName)
+                    </td>
+                    <td>
+                        <img src="@Url.Content("~/Images/"+item.Image)" width="150" height="150" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subtotal)
+                    </td>
+                </tr>
+                if (item.IsRated == false)
+                {
+                    <tr>
+                        <td>
+                            <div onmouseout="RateSelected()">
+                                <span class="starFade" id="Rate1" onclick="RateClick(1)" onmouseover="RateOver(1)" onmouseout="RateOut(1)"></span>
+                                <span class="starFade" id="Rate2" onclick="RateClick(2)" onmouseover="RateOver(2)" onmouseout="RateOut(2)"></span>
+                                <span class="starFade" id="Rate3" onclick="RateClick(3)" onmouseover="RateOver(3)" onmouseout="RateOut(3)"></span>
+                                <span class="starFade" id="Rate4" onclick="RateClick(4)" onmouseover="RateOver(4)" onmouseout="RateOut(4)"></span>
+                                <span class="starFade" id="Rate5" onclick="RateClick(5)" onmouseover="RateOver(5)" onmouseout="RateOut(5)"></span>
+                            </div>
+                            <div>
+                                <input type="hidden" id="Rating" name="rate" />
+                                <p style="color:red;">@ViewBag.ErrorMessage</p>
+                                <input type="hidden" value="@item.ProdOrderId" name="orderid" />
+                                <input type="hidden" value="@item.ProdId" name="prodid" />
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <textarea name="description" placeholder="Description" rows="3" class="form-control"></textarea>
+                        </td>
+                        <td><input type="submit" value="Rate" class="btn btn-danger" /></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            <div onmouseout="RateSelected()">
+                                <span class="starFade" id="Rate1" onclick="RateClick(1)" onmouseover="RateOver(1)" onmouseout="RateOut(1)"></span>
+                                <span class="starFade" id="Rate2" onclick="RateClick(2)" onmouseover="RateOver(2)" onmouseout="RateOut(2)"></span>
+                                <span class="starFade" id="Rate3" onclick="RateClick(3)" onmouseover="RateOver(3)" onmouseout="RateOut(3)"></span>
+                                <span class="starFade" id="Rate4" onclick="RateClick(4)" onmouseover="RateOver(4)" onmouseout="RateOut(4)"></span>
+                                <span class="starFade" id="Rate5" onclick="RateClick(5)" onmouseover="RateOver(5)" onmouseout="RateOut(5)"></span>
+                            </div>
+                            <div>
+                                <input type="hidden" id="Rating" name="rate" />
+                                <p style="color:red;">@ViewBag.ErrorMessage</p>
+                                <input type="hidden" value="@item.ProdOrderId" name="orderid" />
+                                <input type="hidden" value="@item.ProdId" name="prodid" />
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <textarea name="description" placeholder="Description" rows="3" class="form-control" disabled></textarea>
+                        </td>
+                        <td><input type="submit" value="Done" class="btn btn-success" disabled /></td>
+                    </tr>
+                }
+
+
+            }
+        </table>
+        @Html.ActionLink("Back to List", "MyOrders")
+    </div>
+}

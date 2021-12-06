@@ -1,0 +1,64 @@
+﻿@using PCartWeb.Models
+@model dynamic
+@{
+    ViewBag.Title = "Index";
+    decimal ewallet = 0;
+    var coop = "";
+    var comm = "";
+    CommissionTable commission = new CommissionTable();
+    foreach(SuperAdmin ad in Model.Superadmin)
+    {
+        ewallet = ad.Ewallet;
+        coop = ad.Cooperatives;
+        comm = ad.Commission;
+    }
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css">
+</head>
+@if(ViewBag.Message != null)
+{
+    <script>
+        window.onload = function () {
+            alert("@ViewBag.Message");
+        };
+    </script>
+}
+<div class="container-fluid">
+    <h2 style="margin: 25px 0 25px 0;">Dashboard</h2>
+
+    <div class="container-fluid" style="padding: 20px; margin: 20px 0 30px 0; border: solid 10px steelblue; border-radius: 5px;">
+        <div class="row gx-5">
+            <div class="col px-md-4">
+                <h4>Pcart E-Wallet</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Amount: <b>₱ <a>@ewallet</a></b>
+            </div>
+            <div class="col-md-4">
+                <b><a href="#"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw</a></b>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col px-md-4">
+                <b>Status:</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Cooperatives: @coop
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-md-5">
+                Current Commission Rate: @comm %
+            </div>
+        </div>
+    </div>
+
+    <hr />
+</div>

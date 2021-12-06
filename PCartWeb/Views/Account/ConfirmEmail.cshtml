@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Confirm Email";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css" />
+</head>
+
+<div class="container custom-container">
+    <div class="row">
+        <div class="col-md-6 custom-form-1">
+            <h3>Email Confirmed!</h3>
+            <div class="form-group text-center" style="margin-top: 3%;">
+                <p>
+                    Thank you for confirming your email. <br>
+                    Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

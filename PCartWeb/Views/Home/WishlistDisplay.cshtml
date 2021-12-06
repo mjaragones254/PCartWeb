@@ -1,0 +1,90 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewListProd>
+
+@{
+    ViewBag.Title = "WishlistDisplay";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="max-age=604800" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Style/StyleSheet.css" rel="stylesheet" />
+    <link href="~/Style/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+    <link href="~/Style/ui.css" rel="stylesheet" />
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#prodname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Home/Autocomplete",
+                    type: "POST",
+                    dataType: "json",
+                    data: { prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Product_Name, value: item.Product_Name };
+                        }))
+                    },
+                    error: function () {
+                        alert('something went wrong !');
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+
+</script>
+@using (Html.BeginForm())
+{
+    <body>
+        <h2>Wishlist</h2>
+        <div class="container">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search" id="prodname" name="prodname" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <div class="input-group-prepend">
+                    <input class="btn btn-outline-secondary" type="submit" name="submit" id="button-addon1" value="Search" />
+                    <input type="submit" name="refresh" value="Refresh" class="btn btn-outline-primary" />
+                </div>
+
+            </div>
+
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4">
+                        <div href="#" class="card card-product-grid">
+                            <div class="card-body">
+                                <!--add div to last-->
+                                <a href="#" class="img-wrap"> <img src="~/Images/@item.Product_image"> </a>
+                                <figcaption class="info-wrap">
+                                    <a href="#" class="title">@item.Product_name</a>
+                                    <div class="price mt-1">$@item.Product_price</div> <!-- price-wrap.// -->
+                                </figcaption>
+                            </div>
+                            <div class="price my-3" id="center">
+                                <a href="@Url.Action("AddToCart", "Home", new { id = item.ProdId })" class="btn btn-info">Add to Cart</a>
+                                <a href="@Url.Action("RemoveFromWishlist", "Home", new { id = item.ProdId })" class="btn btn-danger">Remove from list</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </body>
+}

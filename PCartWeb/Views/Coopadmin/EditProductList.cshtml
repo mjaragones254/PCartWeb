@@ -1,0 +1,78 @@
+﻿@model PCartWeb.Models.ViewEditImagesVariations
+
+@{
+    ViewBag.Title = "EditProductList";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="table-responsive table-hover w-75 mx-auto">
+    <table class="table mt-5">
+        <tr class="bg-dark">
+            <th>
+                Product Images
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Images)
+        {
+            <tr>
+                <td>
+                    <img src="@Url.Content("~/Images/"+item.Product_image)" width="200" height="200" />
+                </td>
+                <td class="align-middle">
+                    @Html.ActionLink("Delete", "DeleteEditImage", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<div style="margin-left:14%;">
+    <button type="button" onclick="location.href='@Url.Action("EditProductImage", "Coopadmin")'" class="btn btn-primary">Add Image</button>
+</div>
+
+<br />
+@using (Html.BeginForm())
+{
+    <div class="table-responsive">
+        @Html.ValidationMessageFor(model => Model.VarDesc, "", new { @class = "text-danger" }) <br />
+        @Html.ValidationMessageFor(model => Model.Price, "", new { @class = "text-danger" })<br />
+        <p style="color: red;">@ViewBag.errorMessage</p>
+        <table class="table table-bordered">
+            <tr class="bg-dark">
+                <th>Variation Descripton</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            @if (Model.Variations != null)
+            {
+                foreach (var vari in Model.Variations)
+                {
+                    <tr>
+
+                        <td>@Html.DisplayFor(modelItem => vari.Desc)</td>
+                        <td>@Html.DisplayFor(modelItem => vari.Price)</td>
+                        <td>@Html.ActionLink("Delete", "DeleteEditVariation", new { id = vari.Id, prodid = vari.ProdId })</td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td>@Html.EditorFor(model => model.VarDesc, new { htmlAttributes = new { placeholder = "Description", @class = "form-control" } })</td>
+                <td>@Html.EditorFor(model => model.Price, new { htmlAttributes = new { placeholder = "Price", @class = "form-control" } })</td>
+                <td><input class="btn btn-outline-primary" value="Add" type="submit" /></td>
+            </tr>
+        </table>
+        <br />
+        
+    </div>
+}
+<button type="button" class="btn btn-success" onclick="location.href = '@Url.Action("ViewListProduct", "Coopadmin")'">Return to Home</button>

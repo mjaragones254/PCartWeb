@@ -1,0 +1,63 @@
+﻿@model IEnumerable<PCartWeb.Models.DeliveryListDisplay>
+
+@{
+    ViewBag.Title = "DeliveryList";
+}
+
+<h2>Delivery Lists - PENDINGS</h2>
+
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmount)
+            </th>
+            <th>
+                Payment
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalAmount)
+                </td>
+                <td>
+                    @if(item.Mode == "Cash On Delivery")
+                    {
+                        <p>Cash on Delivery</p>
+                    }
+                    else
+                    {
+                        <p>Paid</p>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PickupDate)
+                 </td>
+                <td>
+                    @Html.ActionLink("Details", "DeliveryDetails", new {  id=item.OrderNo  })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>

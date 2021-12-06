@@ -1,0 +1,151 @@
+﻿@model PCartWeb.Models.EditProductModel
+
+@{
+    ViewBag.Title = "EditProduct";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        .custom-ml {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("EditProduct", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container form-horizontal custom-form-1 custom-container w-75">
+
+        <div class="form-horizontal">
+            <h4 class="w-100 bg-dark py-3 text-center">Product Details</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ProductDetailsModel.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.Product_image, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <img src="@Url.Content("~/Images/"+Model.ProductDetailsModel.Product_image)" width="250" height="250" />
+                    <input type="file" name="ImageFile" />
+                    @Html.ValidationMessageFor(model => model.ProductDetailsModel.ImageFile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.Product_Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductDetailsModel.Product_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductDetailsModel.Product_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.Product_desc, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductDetailsModel.Product_desc, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductDetailsModel.Product_desc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductManufacturer.Manufacturer, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductManufacturer.Manufacturer, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductManufacturer.Manufacturer, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.Product_qty, htmlAttributes: new { @class = "control-label col-md-2" })
+                <p class="control-label col-md-2">Stocks on hand</p>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductDetailsModel.Product_qty, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductDetailsModel.Product_qty, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductCost.Cost, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductCost.Cost, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductCost.Cost, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.ExpiryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductDetailsModel.ExpiryDate, new { htmlAttributes = new { @class = "form-control", @id = "ExpiryDate", @Placeholder = "dd/MM/yyyy" } })
+                </div>
+                <p class="text-danger" style="visibility: hidden" id="ErrorDate"></p>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PriceTable.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PriceTable.Price, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PriceTable.Price, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductDetailsModel.Categoryname, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(vm => vm.ProductDetailsModel.Category_Id, Model.ProductDetailsModel.Categorylist, Model.ProductDetailsModel.Categoryname, htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save and Next" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "ViewListProduct")
+        </div>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                flatpickr("#ExpiryDate", {
+                    dateFormat: 'j/n/Y',
+                    minDate: "today",
+                });
+
+                $('#form1').submit(function (e) {
+                    e.preventDefault();
+                    var _this = $(this);
+                    var expiryDate = $("#ExpiryDate").val();
+                    var date = expiryDate.split('/');
+                    var currDate = new Date();
+                    var year = currDate.getFullYear();
+                    var month = currDate.getMonth() + 1;
+                    var day = currDate.getDate();
+
+                    if (date[0] <= day && date[1] == month && date[2] <= year) {
+                        document.getElementById('ErrorDate').style.visibility = "visible";
+                        document.getElementById("ErrorDate").innerHTML = "Your product is already expire. Please do not sell expired goods.";
+                    }
+                    else {
+                        _this.unbind('submit').submit();
+                    }
+                });
+            });
+        </script>

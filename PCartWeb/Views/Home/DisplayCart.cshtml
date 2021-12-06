@@ -1,0 +1,205 @@
+﻿@model PCartWeb.Models.ViewDisplayCart
+
+@{
+    ViewBag.Title = "DisplayCart";
+}
+
+<h2>My Cart</h2>
+
+<style>
+    .origprice {
+        text-decoration: line-through;
+    }
+
+    /*input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+     Firefox 
+    input[type=number] {
+        -moz-appearance: textfield;
+    }*/
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <td>
+                    <input type="checkbox" id="toggleAll" /> All Products
+                </td>
+                <td colspan="6"><input name="submit" type="submit" id="submit" value="Update Qty" class="btn btn-default float-right" /></td>
+            </tr>
+            <tr>
+                <th>
+
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Subtotal
+                </th>
+                <th></th>
+            </tr>
+
+            @for (int j = 0; j < Model.coopShops.Count; j++)
+            {
+                <tr>
+                    <td colspan="7"><b>@Model.coopShops[j].CoopName</b> </td>
+                </tr>
+                for (var i=0;i < Model.productsInCarts.Count; i++)
+                {
+                    <tr>
+                        @if (Model.coopShops[j].CoopID == Model.productsInCarts[i].CoopId)
+                        {
+                            foreach(var prodTotal in Model.productTotals)
+                            {
+                                if(Model.productsInCarts[i].ProdId == prodTotal.ProdId)
+                                {
+                                    <td>
+                                        <input name="isCheck" type="checkbox" class="check" value="@Model.productsInCarts[i].ProdCartId" onclick="onClickHandler()" />
+                                    </td>
+                                    <td>
+                                        <img src="@Url.Content("~/Images/" + Model.productsInCarts[i].Image)" width="100" height="100" />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.productsInCarts[i].ProdName)
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(modelItem => Model.productsInCarts[i].ProdCartId)
+                                        <div class="qty mt-5 counter-div">
+                                            @*<span class="plus btn-secondary unselectable">+</span>*@
+                                            @Html.EditorFor(modelItem => Model.productsInCarts[i].Qty, new { htmlAttributes = new { onchange = "OnChangeEvent()", @class = "form-control", min = 1, max = @prodTotal.Qty } })
+                                            @*<input type="number" class="form-control col-sm-10" name="Qty" min="1" max="@prodTotal.Qty" value="@product.Qty" id="input1" placeholder="enter quantity"><!--Quantity increment starts-->*@
+                                            @*<span class="minus btn-secondary unselectable">-</span>*@
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (Model.productsInCarts[i].DiscountedPrice != 0)
+                                        {
+                                            <span class="origprice">
+                                                &#8369; @Html.DisplayFor(modelItem => Model.productsInCarts[i].Price)
+                                            </span>
+                                            <p>
+                                                &#8369; @Html.DisplayFor(modelItem => Model.productsInCarts[i].DiscountedPrice)
+                                                @(((Model.productsInCarts[i].Price - Model.productsInCarts[i].DiscountedPrice) / Model.productsInCarts[i].Price) * 100)&percnt; OFF
+                                            </p>
+                                        }
+                                        else if (Model.productsInCarts[i].MemberDiscountedPrice != 0)
+                                        {
+                                            <span class="origprice">
+                                                &#8369; @Html.DisplayFor(modelItem => Model.productsInCarts[i].Price)
+                                            </span>
+                                            <p>
+                                                &#8369; @Html.DisplayFor(modelItem => Model.productsInCarts[i].MemberDiscountedPrice)
+                                                @(((Model.productsInCarts[i].Price - Model.productsInCarts[i].MemberDiscountedPrice) / Model.productsInCarts[i].Price) * 100)&percnt; OFF
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => Model.productsInCarts[i].Price)
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.productsInCarts[i].Subtotal)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Details", "ItemDetails", new { id = Model.productsInCarts[i].ProdId })
+                                    </td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+    <b>Partial Total: </b><p id="total">PHP 0.00</p>
+    <input name="submit" type="submit" id="submit" value="Delete" class="btn btn-default" />
+    <input name="submit" type="submit" id="submit" value="Checkout" class="btn btn-default" />
+}
+
+@*<script>
+    $(document).ready(function () {
+        $(document).on('click', '.plus', function () {
+            var count = $(this).closest(".qty").find(".count");
+            if (!$(count).val() || (parseInt($(count).val()) <= 11 && parseInt($(count).val()) >= 0))
+                ;
+            else
+                $(count).val($(count).data("old"));
+                $(count).val(parseInt($(count).val()) + 1);
+        });
+        $(document).on('click', '.minus', function () {
+            var count = $(this).closest(".qty").find(".count");
+            if (!$(count).val() || (parseInt($(count).val()) <= 11 && parseInt($(count).val()) >= 0))
+                $(count).data("old", $(count).val());
+                $(count).val(parseInt($(count).val()) - 1);
+            if ($(count).val() == 0) {
+                $(count).val(1);
+            }
+        });
+    });
+</script>*@
+<script>
+    $("#toggleAll").click(function () {
+        $(".check").prop('checked', this.checked);
+        onClickHandler();
+    });
+
+    $(".check").click(function () {
+        if (!this.checked) {
+            $("#toggleAll").prop('checked', false);
+        }
+        else if ($(".check").length == $(".check" + ":checked").length) {
+            $("#toggleAll").prop('checked', true);
+        }
+    });
+
+    function OnChangeEvent() {
+        var url = "@Url.Action("UpdateItemQuantity", "Home")";
+        var data = $('form').serialize();
+        $.post(url, data, function (res) {
+            //res contains the markup returned by the partial view
+            //You probably want to set that to some Div.
+            $("#SomeDivToShowTheResult").html(res);
+        });
+    }
+
+    function onClickHandler() {
+        var itemSelected = [];
+        $('.check').each(function () {
+            if ($(this).is(":checked")) {
+                itemSelected.push($(this).val());
+            }
+        });
+
+        itemSelected = itemSelected.toString();
+
+        $.post('../Home/CalculateItems', {
+            itemSelected: itemSelected,
+        }, function (data) {
+            if (data[0].role == "Member" && data[0].memberTotal != 0) {
+                document.getElementById("total").innerHTML = "PHP " + data[0].memberTotal;
+            }
+            else {
+                document.getElementById("total").innerHTML = "PHP " + data[0].total;
+            }
+        });
+    }
+
+</script>

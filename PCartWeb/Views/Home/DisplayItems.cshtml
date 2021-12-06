@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewListProd>
+
+@{
+    ViewBag.Title = "DisplayItems";
+}
+
+<h2>DisplayItems</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="container">
+    <div class="row" id="row1">
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-3 col-md-10">
+                <div class="card">
+                    <img src="@Url.Content("~/Images/"+item.Product_image)" class="card-img-top" height="230" alt="...">
+                    <button class="card-body btn btn-light">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Product_name)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Product_desc).</p>
+                    </button>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">PHP. @Html.DisplayFor(modelItem => item.Product_price)</li>
+                    </ul>
+                    <div class="card-footer">
+                        <p class="card-text text-center">
+                            <a href="#" class="btn btn-primary">Buy</a> <a href="#" class="btn btn-info">Add to Cart</a>
+
+                            @if (item.Wish == true)
+                            {
+                                <img src="~/Images/heartred.png" style="cursor:pointer;" height="25" width="25" />
+                            }
+                            else
+                            {
+                                <img src="~/Images/heart.png" onclick="location.href='@Url.Action("AddToWishlist", "Home", new { id = item.Id })'" style="cursor:pointer;" height="25" width="25" />
+                            }
+
+                        </p>
+                    </div>
+                </div>
+                <br />
+            </div>
+
+        }
+    </div>
+</div>

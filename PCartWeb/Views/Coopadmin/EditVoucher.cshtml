@@ -1,0 +1,288 @@
+﻿@model PCartWeb.Models.VoucherDetailsModel
+
+@{
+    ViewBag.Title = "EditVoucher";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        .custom-ml {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("EditVoucher", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="container form-horizontal custom-form-1 custom-container w-75">
+    <h4 class="w-100 bg-dark py-3 text-center">Edit Voucher</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.VoucherCode)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            <p class="text-danger" style="display: none" id="Error1"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DiscountType, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.DiscountType, Model.DiscType, Model.DiscountType, htmlAttributes: new { @class = "form-control" })
+            <p class="text-danger" style="display: none" id="Error2"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserType, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.UserType, Model.UserTypeList, "Select one", htmlAttributes: new { @class = "form-control" })
+            <p class="text-danger" style="display: none" id="Error3"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Percent_Discount, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Percent_Discount, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Percent_Discount, "", new { @class = "text-danger" })
+            <p class="text-danger" style="display: none" id="Error4"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Min_spend, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Min_spend, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Min_spend, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateStart, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+            <p class="text-danger" style="display: none" id="ErrorDate1"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ExpiryDate, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ExpiryDate, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+            <p class="text-danger" style="display: none" id="ErrorDate2"></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+                window.location.href = '/Coopadmin/ViewVoucherList/';
+            };
+    </script>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "ViewVoucherList")
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/themes/light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/shortcut-buttons-flatpickr.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        flatpickr("#DateStart", {
+            enableTime: true,
+            dateFormat: 'j/n/Y h:i K',
+            minDate: "today",
+            onReady: function () {
+                if (this.amPM)
+                    this.amPM.textContent = "AM";
+            },
+            plugins: [
+                ShortcutButtonsPlugin({
+                    button: [
+                        {
+                            label: "Today"
+                        },
+                        {
+                            label: 'Clear'
+                        }
+                    ],
+                    onClick: (index, fp) => {
+                        let date;
+                        switch (index) {
+                            case 0:
+                                date = new Date();
+                                fp.close();
+                                break;
+                            case 1:
+                                fp.clear();
+                                fp.close();
+                                break;
+                        }
+                        fp.setDate(date);
+                    }
+                })
+            ]
+        });
+
+        flatpickr("#ExpiryDate", {
+            enableTime: true,
+            dateFormat: 'j/n/Y h:i K',
+            minDate: "today",
+            onReady: function () {
+                if (this.amPM)
+                    this.amPM.textContent = "AM";
+            },
+            plugins: [
+                ShortcutButtonsPlugin({
+                    button: [
+                        {
+                            label: "Today"
+                        },
+                        {
+                            label: 'Clear'
+                        }
+                    ],
+                    onClick: (index, fp) => {
+                        let date;
+                        switch (index) {
+                            case 0:
+                                date = new Date();
+                                fp.close();
+                                break;
+                            case 1:
+                                fp.clear();
+                                fp.close();
+                                break;
+                        }
+                        fp.setDate(date);
+                    }
+                })
+            ]
+        });
+
+        function ConvertHour(hour, modifier) {
+            if (hour === '12') {
+                hour = '00';
+            }
+            if (modifier === 'PM') {
+                hour = parseInt(hour, 10) + 12;
+            }
+            return hour;
+        }
+
+        $('#form1').submit(function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            var dateStart1 = $("#DateStart").val();
+            var dateEnd1 = $("#ExpiryDate").val();
+
+            if (dateStart1 == "" || dateEnd1 == "" || $("#Name").val() == "" || $("#DiscountType").val() == "Select one" || $("#UserType").val() == "Select one") {
+                if (dateStart1 == "") {
+                    document.getElementById('ErrorDate1').style.display = "block";
+                    document.getElementById("ErrorDate1").innerHTML = "Date start is required. Kindly enter a valid date start.";
+                }
+                else {
+                    document.getElementById('ErrorDate1').style.display = "none";
+                }
+                if (dateEnd1 == "") {
+                    document.getElementById('ErrorDate2').style.display = "block";
+                    document.getElementById("ErrorDate2").innerHTML = "Date end is required. Kindly enter a valid date end.";
+                }
+                else {
+                    document.getElementById('ErrorDate2').style.display = "none";
+                }
+                if ($("#Name").val() == "Select one") {
+                    document.getElementById('Error1').style.display = "block";
+                    document.getElementById("Error1").innerHTML = "This field is required. Kindly select a discount type.";
+                }
+                else {
+                    doucument.getElementById("Error1").style.display = "none";
+                }
+                if ($("#DiscountType").val() == "Select one") {
+                    document.getElementById('Error2').style.display = "block";
+                    document.getElementById("Error2").innerHTML = "This field is required. Kindly select a discount type.";
+                }
+                else {
+                    doucument.getElementById("Error2").style.display = "none";
+                }
+                if ($("#UserType").val() == "Select one") {
+                    document.getElementById('Error3').style.display = "block";
+                    document.getElementById("Error3").innerHTML = "This field is required. Kindly select a user type.";
+                }
+                else {
+                    doucument.getElementById("Error3").style.display = "none";
+                }
+
+            }
+            else {
+                var time1 = dateStart1.split(' ');
+                var date1 = time1[0].split('/');
+                var realTime1 = time1[1].split(':');
+                realTime1[0] = ConvertHour(realTime1[0], time1[2]);
+                var dateStart2 = new Date(date1[2], date1[1] - 1, date1[0], realTime1[0], realTime1[1]);
+                var time2 = dateEnd1.split(' ');
+                var date2 = time2[0].split('/');
+                var realTime2 = time2[1].split(':');
+                realTime2[0] = ConvertHour(realTime2[0], time2[2])
+                var dateEnd2 = new Date(date2[2], date2[1] - 1, date2[0], realTime2[0], realTime2[1]);
+                var currDate = new Date();
+                var currDate2 = new Date(currDate.getFullYear(), currDate.getMonth() - 1, currDate.getDate(), currDate.getHours(), currDate.getMinutes());
+
+                if (dateStart2 >= dateEnd2) {
+                    document.getElementById('ErrorDate2').style.display = "none";
+                    document.getElementById('ErrorDate1').style.display = "block";
+                    document.getElementById("ErrorDate1").innerHTML = "Date start is higher than expiry date. Kindly enter a valid date start.";
+                }
+                else if (dateStart2 < currDate2) {
+                    document.getElementById('ErrorDate2').style.display = "none";
+                    document.getElementById('ErrorDate1').style.display = "block";
+                    document.getElementById("ErrorDate1").innerHTML = "Date start cannot be lesser than today. Kindly input a valid date start.";
+                }
+                else if (dateEnd2 < currDate2) {
+                    document.getElementById('ErrorDate1').style.display = "none";
+                    document.getElementById('ErrorDate2').style.display = "block";
+                    document.getElementById("ErrorDate2").innerHTML = "Expiry date cannot be lesser than today. Kindly input a valid expiry date.";
+                }
+                else if ($("#Percent_Discount").val() > 100 && $("#DiscountType").val() == "Percent") {
+                    document.getElementById('Error4').style.display = "block";
+                    document.getElementById("Error4").innerHTML = "Percent cannot be more than a hundred.";
+                }
+                else {
+                    _this.unbind('submit').submit();
+                }
+            }
+        });
+    });
+</script>
+
+

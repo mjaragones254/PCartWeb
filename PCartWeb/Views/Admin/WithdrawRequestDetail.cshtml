@@ -1,0 +1,107 @@
+﻿@model PCartWeb.Models.WithdrawViewModel
+
+@{
+    ViewBag.Title = "WithdrawRequestDetail";
+}
+
+<h2>WithdrawRequestDetail</h2>
+
+<div>
+    <h4>WithdrawViewModel</h4>
+    <hr />
+    @using (Html.BeginForm("FulfilledRequest", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <dl class="dl-horizontal">
+            @if (Model.Method == "Paypal")
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CoopName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CoopName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Amount)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateRequested)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateRequested)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Method)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Method)
+                </dd>
+            }
+            else
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.Fullname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Fullname)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Contact)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Contact)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Amount)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateRequested)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateRequested)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Method)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Method)
+                </dd>
+            }
+            <dt>Upload Receipt</dt>
+            <dd><input type="file" name="ReceiptFile" />&nbsp;&nbsp;<input type="submit" name="submit" value="Fulfill Request" /></dd>
+        </dl>
+    }
+
+</div>
+<p>
+    @Html.ActionLink("Back to List", "WithdrawPendingReport")
+</p>

@@ -1,0 +1,71 @@
+﻿@model PCartWeb.Models.ViewChat
+
+@{
+    ViewBag.Title = "CoopChat";
+}
+
+<h4 class="ml-4 mt-2">Coop Chat</h4>
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        a h6, a p {
+            color: black;
+            list-style: none;
+        }
+    </style>
+</head>
+
+<div class="container custom-form-1 w-75 mx-auto">
+    <h5>@Html.DisplayFor(model => model.ReceiversName)</h5>
+   
+
+    @if (Model.Messages != null)
+    {
+        <table class="table" style="margin: 20px;">
+            <tbody id="displayMembers">
+                @foreach (var item in Model.Messages)
+                {
+                    <tr>
+                        <th scope="row">
+                            @Html.DisplayFor(modelItem => item.From)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MessageBody)
+                        </td>
+                        <td>
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.DateSent)</small>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <hr />
+            @Html.HiddenFor(model => model.ReceiversId)
+            <div class="form-group">
+                @Html.LabelFor(model => model.MessageToSend, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MessageToSend, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MessageToSend, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div>
+    @Html.ActionLink("Back to List", "InboxChat")
+</div>
+

@@ -1,0 +1,155 @@
+﻿@model PCartWeb.Models.ViewSalesReport
+
+@{
+    ViewBag.Title = "ViewCoopSales";
+}
+
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm())
+{
+    <div class="custom-form-1 custom-container w-100 col-4">
+        <h4>Coop Sales</h4>
+        <hr />
+        <div class="form-group">
+            <input list="coopList" name="CoopSearch" id="CoopSearch" placeholder="Search COOP'" size="30">
+            <datalist id="coopList">
+                @foreach (var coop in Model.Coops)
+                {
+                    <option data-customvalue="@coop.CoopId" value="@coop.CoopName" />
+                }
+            </datalist>
+        </div>
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.CoopSearch, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-6">
+                    @Html.DropDownListFor(vm => vm.CoopSearch, new SelectList(Model.Coops, "CoopId", "CoopName"), "Select a COOP", htmlAttributes: new { @class = "form-control" })
+                </div>
+                <div class="text-danger">
+                    @Model.CoopSearchError
+                </div>
+            </div>*@
+    <div class="form-group">
+        <p>View By: </p>
+        <input type="radio" id="week" name="ViewBy" value="Weekly">
+        <label for="week">Weekly</label>
+        <br>
+        <input type="radio" id="month" name="ViewBy" value="Monthly">
+        <label for="month">Monthly</label>
+        <br>
+        <input type="radio" id="year" name="ViewBy" value="Yearly">
+        <label for="year">Yearly</label>
+        <br /> <br />
+        <input name="submit" type="submit" id="submit" value="Apply" class="btn btn-default" />
+    </div>
+    </div>
+}
+
+
+@*<button class="btn btn-primary" onclick="location.href = '@Url.Action("ViewCoopSales", "Paypal", new { money = totEach, user_id = id, vouchcode = vouchcode })'">Pay Order with PayPal</button>*@
+
+@*@Html.ActionLink("Export to PDF", "Reports", new { ReportType = "PDF" }) |
+    @Html.ActionLink("Export to Excel", "Reports", new { ReportType = "Excel" }) |
+    @Html.ActionLink("Export to Word", "Reports", new { ReportType = "Word" })*@
+
+
+@if (Model.SalesReports != null)
+{
+    <div class="table-responsive table-hover">
+        <table class="table">
+            <tr class="bg-dark">
+                <th>
+                    Order No.
+                </th>
+                <th>
+                    COOP Name
+                </th>
+                <th>
+                    Customer Name
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Total Amount
+                </th>
+                <th>
+                    Commision Fee
+                </th>
+                <th>
+                    Delivery Fee
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.SalesReports)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderNo)
+                    </td>
+                    <th>
+                        @Html.DisplayFor(modelItem => item.CoopName)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionFee)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Delivery_fee)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+@if (Model.ViewBySales != null)
+{
+    <div class="table-responsive table-hover">
+        <table class="table">
+            <tr class="bg-dark">
+                <th>
+                    COOP Name
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Total Price
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.ViewBySales)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CoopName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+        }

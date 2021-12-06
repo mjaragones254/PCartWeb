@@ -1,0 +1,94 @@
+﻿@model IEnumerable<PCartWeb.Models.ViewListVouch>
+@using System.Globalization
+@{
+    ViewBag.Title = "ViewVoucherList";
+}
+
+<h4>Voucher List</h4>
+<hr />
+
+<head>
+    <style>
+        th {
+            color: white;
+        }
+    </style>
+</head>
+
+<p>
+    @Html.ActionLink("Create New", "CreateVoucher")
+</p>
+<div class="table-responsive table-hover">
+    <table class="table">
+        <tr class="bg-dark">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Percent_Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Min_spend)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiscountType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Percent_Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Min_spend)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpiryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created_at)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated_at)
+                </td>
+                <td>
+                    @{ CultureInfo culture = new CultureInfo("es-ES");
+                        CultureInfo culture1 = new CultureInfo("es-ES");
+                        var datestart = DateTime.Parse(item.DateStart, culture);
+                        var Expiryd = DateTime.Parse(item.ExpiryDate, culture1);
+                    }
+                    @if (datestart <= DateTime.Now && Expiryd >= DateTime.Now)
+                    {
+                        @Html.ActionLink("Details", "VoucherDetails", new { id = item.Id })
+                    }
+                    else
+                    {
+                        <p>
+                            @Html.ActionLink("Edit", "EditVoucher", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "DeleteVoucher", new { id = item.Id })
+                        </p>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

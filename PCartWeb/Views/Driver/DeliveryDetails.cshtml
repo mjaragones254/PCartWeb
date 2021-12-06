@@ -1,0 +1,250 @@
+﻿@model PCartWeb.Models.ViewCustomerOrder
+
+@{
+    ViewBag.Title = "DeliveryDetails";
+    var custlong = Model.CustLong;
+    var custlat = Model.CustLat;
+    var cooplong = Model.CoopLong;
+    var cooplat = Model.CoopLat;
+    var address = Model.Address;
+    var coopaddress = Model.CoopAddress;
+}
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <script src="~/Scripts/jquery-3.5.1.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8&callback=initMap">
+</script>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Subtotal
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ProdOrders)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content("~/Images/" + item.ProdImage)" width="50" height="50" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProdName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @if (item.DiscountedPrice != 0)
+                        {
+                            <div class="price mt-1">
+                                <span class="origprice">
+                                    &#8369; @Html.DisplayFor(modelItem => item.Price)
+                                </span>
+                                &#8369; @Html.DisplayFor(modelItem => item.DiscountedPrice)
+                                @(((item.Price - item.DiscountedPrice) / item.Price) * 100)&percnt; OFF
+                            </div> <!-- price-wrap.// -->
+                        }
+                        else if (item.MemberDiscountedPrice != 0)
+                        {
+                            <div class="price mt-1">
+                                <span class="origprice">
+                                    &#8369; @Html.DisplayFor(modelItem => item.Price)
+                                </span>
+                                &#8369; @Html.DisplayFor(modelItem => item.MemberDiscountedPrice)
+                                @(((item.Price - item.MemberDiscountedPrice) / item.Price) * 100)&percnt; OFF
+                            </div> <!-- price-wrap.// -->
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Price)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubTotal)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<input type="hidden" value="@address" id="destination" />
+<input type="hidden" value="@coopaddress" id="orig" />
+<input type="hidden" value="@custlat" id="custlat" />
+<input type="hidden" value="@custlong" id="custlong" />
+<input type="hidden" value="@cooplat" id="cooplat" />
+<input type="hidden" value="@cooplong" id="cooplong" />
+<p>Mode Of Payment: @Html.DisplayFor(modelItem => Model.UserOrders.ModeOfPay)</p>
+<p>Delivery Fee: PHP @Html.DisplayFor(modelItem => Model.UserOrders.Delivery_fee)</p>
+<p>Buyer's Payment: &#8369; @(decimal.Round(Model.Delivery.TotalAmount, 2, MidpointRounding.AwayFromZero))</p>
+<p>Address: @Html.DisplayFor(modelItem => Model.Address) </p>
+<p>Customer: @Html.DisplayFor(modelItem => Model.Delivery.Customer)</p>
+<input type="submit" onclick="GetRoute()" value="Pin Customer" class="btn btn-info" />
+<input type="submit" onclick="CurrentLoc()" value="Current Location" class="btn btn-info" />
+<br />
+
+<div id="map"></div>
+<div id="dvDistance" style="font-size:x-large; font-family: Arial Black; background-color: Yellow; color: Blue; text-align: center">
+</div>
+<div id="dvPanel">
+</div>
+@if (Model.DeliveryDetails.PickUpSuccessDate != "")
+{
+    using (Html.BeginForm("DeliveryDetails", "Driver", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" value="@Model.UserOrders.Id" id="uorderId" />
+        <input type="file" name="ImageFile" id="imageFile" />
+        <input type="submit" value="Delivered" class="btn btn-success" />
+    }
+    <p>Choose a reason why is it to be returned</p>
+    <select class="custom-select" id="Reason" name="Reason">
+        <option value="">-----</option>
+        <option value="Customer cannot be contact.">Customer cannot be contact.</option>
+        <option value="Customer is not on site.">Customer is not on site.</option>
+        <option value="Item is defective or broken.">Item is defective or broken.</option>
+    </select>
+    <button class="btn btn-danger" onclick="location.href = '@Url.Action("ToBeReturned", "Driver", new { id = Model.UserOrders.Id })'">To Be Returned</button>
+}
+else
+{
+    <button class="btn btn-success" onclick="location.href = '@Url.Action("PickupItem", "Driver", new { id = Model.UserOrders.Id })'">Picked-up Item Successfully</button>
+}
+
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}
+
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: @custlat, lng: @custlong },
+            zoom: 18
+        });
+    }
+</script>
+<script type="text/javascript">
+    var source, destination;
+    let infoWindow;
+
+    function GetRoute() {
+        var custlat = @custlat;
+        var custlng = @custlong;
+        var mumbai = new google.maps.LatLng(custlat, custlng);
+        var mapOptions = {
+            zoom: 16,
+            center: mumbai
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+
+        source = document.getElementById('orig').value;
+        destination = document.getElementById('destination').value;
+
+        var request = {
+            origin: source,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        const marker = new google.maps.Marker({
+            position: mumbai,
+            map: map,
+        });
+
+        directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('dvPanel'));
+    }
+
+    function CurrentLoc() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 10.299118, lng: 123.868659 },
+            zoom: 16,
+        });
+        infoWindow = new google.maps.InfoWindow();
+
+        const locationButton = document.createElement("button");
+        locationButton.textContent = "Pan to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        locationButton.addEventListener("click", () => {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent("Location found.");
+                        infoWindow.open(map);
+                        map.setCenter(pos);
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+            browserHasGeolocation
+                ? "Error: The Geolocation service failed."
+                : "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+    }
+</script>  
