@@ -228,8 +228,11 @@ namespace PCartWeb.Models
         public HttpPostedFileBase ImageFile { get; set; }
 
         [Required]
-        [Display(Name = "Phone Contact")]
+        [Display(Name = "Contact No.")]
         [DataType(DataType.PhoneNumber)]
+        [MaxLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [MinLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Contact No. must be numeric.")]
         public string Contact { get; set; }
 
         [Required]
@@ -331,14 +334,17 @@ namespace PCartWeb.Models
         public string Image { get; set; }
         public HttpPostedFileBase ImageFile { get; set; }
         [Required]
-        [Display(Name = "Coop Name")]
+        [Display(Name = "Co-op Name")]
         public string CoopName { get; set; }
         [Required]
-        [Display(Name = "Coop Address")]
+        [Display(Name = "Co-op Address")]
         public string CoopAddress { get; set; }
         [Required]
-        [Display(Name = "Coop Contact")]
+        [Display(Name = "Co-op Contact No.")]
         [DataType(DataType.PhoneNumber)]
+        [MaxLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [MinLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Contact No. must be numeric.")]
         public string CoopContact { get; set; }
 
         [Required]
@@ -355,8 +361,11 @@ namespace PCartWeb.Models
         public string Lastname { get; set; }
 
         [Required]
-        [Display(Name = "Phone Contact")]
+        [Display(Name = "Contact No.")]
         [DataType(DataType.PhoneNumber)]
+        [MaxLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [MinLength(11, ErrorMessage = "Invalid contact no. Kindly enter a valid one.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Contact No. must be numeric.")]
         public string Contact { get; set; }
 
         [Required]

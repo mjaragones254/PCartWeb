@@ -15,10 +15,10 @@
                 <img src="~/Images/PCartLogo.png" class="img-fluid" />
             </div>
             <div class="col-md-6 custom-form-1">
-                <h3>Log in</h3>
                 <section id="loginForm">
                     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
+                        <h3 style="margin-bottom: 20px">Log In</h3>
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">

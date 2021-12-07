@@ -225,11 +225,7 @@ namespace PCartWeb.Controllers
                 new SelectListItem {Selected = false, Text = "LGBTQ", Value = "LGBTQ"},
                 new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
             }, "Value", "Text", 1);
-            //if (model.Bdate < DateTime.Now)
-            //{
-            //    ViewBag.GenderError = "Date is not valid";
-            //    return View(model);
-            //}
+
             int gen = 0, stat = 0;
             if (model.Gender == null)
             {
@@ -491,7 +487,6 @@ namespace PCartWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase file)
         {
-            int gen = 0;
             model.GenderList = new SelectList(new List<SelectListItem>
             {
                 new SelectListItem {Selected = false, Text = "Male", Value = "Male"},
@@ -499,18 +494,7 @@ namespace PCartWeb.Controllers
                 new SelectListItem {Selected = false, Text = "LGBTQ", Value = "LGBTQ"},
                 new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
             }, "Value", "Text", 1);
-            if (model.Gender == null)
-            {
-                gen = 1;
-            }
-            if (gen == 1)
-            {
-                ViewBag.GenderError = "Please select your gender.";
-                model.Longitude = string.Empty;
-                model.Latitude = string.Empty;
-                ModelState.Clear();
-                return View(model);
-            }
+
             if (ModelState.IsValid)
             {
                 if (model.ImageFile != null)
@@ -718,49 +702,6 @@ namespace PCartWeb.Controllers
                 new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
             }, "Value", "Text", 1);
 
-            int gen = 0, stat = 0;
-            if (model.Gender == null)
-            {
-                gen = 1;
-            }
-            if (model.CStatus == null)
-            {
-                stat = 1;
-            }
-            if (gen == 1 && stat == 1)
-            {
-                ViewBag.GenderError = "Please select your gender.";
-                ViewBag.StatusError = "Please select your marital status.";
-                model.CoopAddress = string.Empty;
-                model.Address = string.Empty;
-                model.Latitude = string.Empty;
-                model.Latitude1 = string.Empty;
-                model.Longitude = string.Empty;
-                model.Longitude1 = string.Empty;
-                return View(model);
-            }
-            else if (gen == 1)
-            {
-                ViewBag.GenderError = "Please select your gender.";
-                model.CoopAddress = string.Empty;
-                model.Address = string.Empty;
-                model.Latitude = string.Empty;
-                model.Latitude1 = string.Empty;
-                model.Longitude = string.Empty;
-                model.Longitude1 = string.Empty;
-                return View(model);
-            }
-            else if (stat == 1)
-            {
-                ViewBag.StatusError = "Please select your marital status.";
-                model.CoopAddress = string.Empty;
-                model.Address = string.Empty;
-                model.Latitude = string.Empty;
-                model.Latitude1 = string.Empty;
-                model.Longitude = string.Empty;
-                model.Longitude1 = string.Empty;
-                return View(model);
-            }
             if (ModelState.IsValid)
             {
                 bool checkcoop = CheckCoop(model.CoopName, model.CoopAddress);
@@ -971,6 +912,10 @@ namespace PCartWeb.Controllers
         [AllowAnonymous]
         public ActionResult AddImageDocuments()
         {
+            if (Session["CoopId"] == null)
+            {
+                return RedirectToAction("RegisterCoopAdmin");
+            }
             string id = Session["CoopId"].ToString();
             Session["CoopId"] = id;
             return View();

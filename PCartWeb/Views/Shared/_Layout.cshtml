@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>PCart &nbsp;|&nbsp; @ViewBag.Title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -45,9 +45,20 @@
                 });
         });
     </script>
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: x-large;
+        }
+
+        .nav-link {
+            font-weight: bold;
+            font-size: large;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-image: linear-gradient(15deg, #001FA1 0%, #ffffff 100%);">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: #1b66fa" @*style="background-image: linear-gradient(15deg, #001FA1 0%, #ffffff 100%);"*@>
         <a href="/Home/Index" class="navbar-brand"> <img src="~/Images/PCartLogo.png" alt="Company logo" width="60" height="50" /></a>
         @if (User.IsInRole("Admin"))
         {
