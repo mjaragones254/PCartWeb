@@ -5362,7 +5362,14 @@ namespace PCartWeb.Controllers
                                 string extension = Path.GetExtension(model2.ReceiptFile.FileName);
                                 var path = Path.Combine(Server.MapPath("../Receipts/"), name + extension);
                                 model2.ReceiptFile.SaveAs(path);
-                                return RedirectToAction("PaymentWithPayPal", "Paypalpayable", new { money = model2.TotalTobePay, name = name, extension = extension, coopid = coop.Id, accountid = user, mode = model2.Mode, email = model2.Email });
+                                Session["money"] = model2.TotalTobePay;
+                                Session["filename"] = name;
+                                Session["extension"] = extension;
+                                Session["coopid"] = coop.Id.ToString();
+                                Session["accountid"] = user;
+                                Session["mode"] = model2.Mode;
+                                Session["email"] = model2.Email;
+                                return RedirectToAction("Paymentwithpaypal", "Paypalpayable");
                             }
                             else if ((model2.Mode == "MLhuillier" || model2.Mode == "Cebuana" || model2.Mode == "Palawan") && model2.TotalTobePay > 0 && model2.Fullname != null && model2.Contact != null)
                             {

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Web;
 using System.Web.Mvc;
 using PCartWeb.Models;
+using System.Data.Entity;
 
 namespace PCartWeb.Controllers
 {
@@ -78,7 +79,13 @@ namespace PCartWeb.Controllers
             var user = User.Identity.GetUserId();
             var userEwallet = db.UserEWallet.Where(x => x.UserID == user && x.Status == "Active").FirstOrDefault();
             userEwallet.Balance += totalam;
-            db.Entry(userEwallet).State = System.Data.Entity.EntityState.Modified;
+            db.Entry(userEwallet).State = EntityState.Modified;
+            db.SaveChanges();
+
+            var admin = db.Users.Where(x => x.Email == "PCartTeam@gmail.com").FirstOrDefault();
+            var adminEwallet = db.UserEWallet.Where(x => x.UserID == admin.Id).FirstOrDefault();
+            adminEwallet.Balance += totalam;
+            db.Entry(adminEwallet).State = EntityState.Modified;
             db.SaveChanges();
 
             var ewalletHistory = new EWalletHistory();
@@ -89,6 +96,16 @@ namespace PCartWeb.Controllers
             ewalletHistory.Created_At = DateTime.Now;
             db.EWalletHistories.Add(ewalletHistory);
             db.SaveChanges();
+
+            var adminewallethistory = new EWalletHistory();
+            adminewallethistory.EWallet_ID = adminEwallet.ID;
+            adminewallethistory.Amount = totalam;
+            adminewallethistory.Action = "Customer Top-Up";
+            adminewallethistory.Description = "Top-Up Successfully.";
+            adminewallethistory.Created_At = DateTime.Now;
+            db.EWalletHistories.Add(adminewallethistory);
+            db.SaveChanges();
+
 
             return View("SuccessView");
         }

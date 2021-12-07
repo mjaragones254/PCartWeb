@@ -13,15 +13,8 @@ namespace PCartWeb.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
         // GET: Membershippaypal
-        public ActionResult PaymentWithPayPal(decimal money, string name, string extension, int coopid, string accountid, string mode, string email, string Cancel = null)
+        public ActionResult Paymentwithpaypal(string Cancel = null)
         {
-            Session["money"] = money;
-            Session["filename"] = name;
-            Session["extension"] = extension;
-            Session["coopid"] = coopid;
-            Session["accountid"] = accountid;
-            Session["mode"] = mode;
-            Session["email"] = email;
             //getting the apiContext  
             APIContext apiContext = PaypalConfiguration.GetAPIContext();
             try
@@ -38,7 +31,7 @@ namespace PCartWeb.Controllers
                     // Creating a payment
                     // baseURL is the url on which paypal sendsback the data.
                     string baseURI = Request.Url.Scheme + "://" + Request.Url.Authority +
-                    "/Membershippaypal/PaymentWithPayPal?";
+                    "/Paypalpayable/Paymentwithpaypal?";
                     //here we are generating guid for storing the paymentID received in session
                     //which will be used in the payment execution
                     var guid = Convert.ToString((new Random()).Next(100000));
@@ -78,7 +71,7 @@ namespace PCartWeb.Controllers
                 return View("FailureView");
             }
             //on successful payment, show success page to user.  
-            string total = Session["total4"].ToString();
+            string total = Session["total5"].ToString();
             string filename = Session["filename"].ToString();
             string extensions = Session["extension"].ToString();
             int coopids = int.Parse(Session["coopid"].ToString());
@@ -132,12 +125,8 @@ namespace PCartWeb.Controllers
         private PayPal.Api.Payment payment;
         private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)
         {
-            string totalamount = "";
-            if (Session["money"] != null)
-            {
-                totalamount = Session["money"].ToString();
-                Session["total4"] = totalamount;
-            }
+            string totalamount = Session["total4"].ToString();
+            Session["total5"] = totalamount;
             var paymentExecution = new PaymentExecution()
             {
                 payer_id = payerId
@@ -185,6 +174,11 @@ namespace PCartWeb.Controllers
             {
                 string mode = Session["mode"].ToString();
                 Session["modes"] = mode;
+            }
+            if(Session["email"] != null)
+            {
+                string email = Session["email"].ToString();
+                Session["emails"] = email;
             }
             Session["filename"] = filename;
             Session["extension"] = extension;

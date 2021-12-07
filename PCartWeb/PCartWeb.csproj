@@ -229,7 +229,6 @@
   <ItemGroup>
     <Compile Include="Controllers\DriverController.cs" />
     <Compile Include="Controllers\MembershippaypalController.cs" />
-    <Compile Include="Controllers\PayablePaypalController.cs" />
     <Compile Include="Controllers\PaypalController.cs" />
     <Compile Include="Controllers\PaypalpayableController.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
