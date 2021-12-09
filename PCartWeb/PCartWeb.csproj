@@ -233,6 +233,7 @@
     <Compile Include="Controllers\PaypalpayableController.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\PaypalConfiguration.cs" />
     <Compile Include="WebApiController\AccountController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />

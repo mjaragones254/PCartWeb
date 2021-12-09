@@ -1,71 +1,65 @@
 ﻿@model IEnumerable<PCartWeb.Models.CoopAdminDetailsModel>
 
 @{
-    ViewBag.Title = "ViewPendingAdminAccnts";
+    ViewBag.Title = "Pending Co-op Admin Application";
 }
-
-<h4>Pending Admin Accounts</h4>
-<hr />
 
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        th {
+        h4 {
             color: white;
         }
     </style>
 </head>
 
-<div class="table-responsive table-hover">
-    <table class="table">
-        <tr class="bg-dark">
-            <th>
-                @Html.DisplayNameFor(model => model.Firstname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lastname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contact)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created_at)
-            </th>
-            <th></th>
-        </tr>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Co-op Admin Applications</h4>
+        <hr />
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Firstname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lastname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contact)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created_at)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "PendingAccntDetails", new { id = item.ID })
-                </td>
-            </tr>
-        }
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Admin/LoadPendingCoopAdmin",
+                    function (data) {
+                        var tr;
 
-    </table>
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].firstname + "</td>");
+                            tr.append("<td>" + data[i].lastname + "</td>");
+                            tr.append("<td>" + data[i].contact + "</td>");
+                            tr.append("<td>" + data[i].address + "</td>");
+                            tr.append("<td>" + data[i].email + "</td>");
+                            tr.append("<td>" + data[i].dateCreated + "</td>");
+                            tr.append("<td>" + '<a href="@Url.Action("PendingAccntDetails", "Admin")?id=' + data[i].coopAdminId + '">Details</a>' + "</td>");
+                            $('.table').append(tr);
+                        }
+
+                        $('#pendingCoopAdmin').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table id="pendingCoopAdmin" class="table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Contact No.</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Date Applied</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </div>

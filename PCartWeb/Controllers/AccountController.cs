@@ -22,7 +22,6 @@ namespace PCartWeb.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-
         public AccountController()
         {
         }
@@ -57,7 +56,6 @@ namespace PCartWeb.Controllers
             }
         }
 
-        //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -78,7 +76,6 @@ namespace PCartWeb.Controllers
             return View();
         }
 
-        //
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
@@ -89,6 +86,7 @@ namespace PCartWeb.Controllers
             {
                 return View(model);
             }
+
             var user = await UserManager.FindByNameAsync(model.Email);
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
@@ -195,11 +193,13 @@ namespace PCartWeb.Controllers
                     new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
                 }, "Value", "Text", 1)
             };
+
             TempData["email"] = email;
             TempData.Keep();
             ModelState.Clear();
             return View(model);
         }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -209,6 +209,7 @@ namespace PCartWeb.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             var db = new ApplicationDbContext();
             model.CStatusList = new SelectList(new List<SelectListItem>
             {

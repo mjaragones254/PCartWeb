@@ -1,62 +1,63 @@
 ﻿@model IEnumerable<PCartWeb.Models.CoopDetailsModel>
 
 @{
-    ViewBag.Title = "ViewPendingCoop";
+    ViewBag.Title = "Co-op Applications";
 }
-
-<h4>Pending Coop</h4>
-<br />
 
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        th {
+        h4 {
             color: white;
         }
     </style>
 </head>
 
-<p>
-    @Html.ActionLink("View Pending Admin Accounts", "ViewPendingAdminAccnts")
-</p>
-<div class="table-responsive table-hover">
-    <table class="table">
-        <tr class="bg-dark">
-            <th>
-                @Html.DisplayNameFor(model => model.CoopName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contact)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coop_Created)
-            </th>
-            <th></th>
-        </tr>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Co-op Applications</h4>
+        <hr />
+        <h4 class="mb-0"><button class="btn btn-primary" onclick="location.href = '@Url.Action("ViewPendingAdminAccnts", "Admin")'">View Pending Co-op Admin Application</button></h4>
+        <br />
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CoopName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contact)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Coop_Updated)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "DisplayCoopDetailReq", new { id = item.Id })
-                </td>
-            </tr>
-        }
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Admin/LoadPendingCoop",
+                    function (data) {
+                        var tr;
 
-    </table>
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].name + "</td>");
+                            tr.append("<td>" + data[i].address + "</td>");
+                            tr.append("<td>" + data[i].contact + "</td>");
+                            tr.append("<td>" + data[i].dateCreated + "</td>");
+                            tr.append("<td>" + '<a href="@Url.Action("DisplayCoopDetailReq", "Admin")?id=' + data[i].coopId + '">Details</a>' + "</td>");
+                            $('.table').append(tr);
+                        }
+
+                        $('#pendingCoop').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table id="pendingCoop" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Co-op Name</th>
+                        <th>Address</th>
+                        <th>Contact No.</th>
+                        <th>Date Applied</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </div>

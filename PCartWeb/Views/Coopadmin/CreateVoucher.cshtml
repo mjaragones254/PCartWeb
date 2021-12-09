@@ -26,73 +26,73 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="container form-horizontal custom-form-1 custom-container w-75">
-    <h4 class="w-100 bg-dark py-3 text-center">Create Voucher</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            <p class="text-danger" style="display: none" id="Error1"></p>
+    <div class="container form-horizontal custom-form-1 custom-container w-75">
+        <h4 class="w-100 bg-dark py-3 text-center">Create Voucher</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                <p class="text-danger" style="display: none" id="Error1"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DiscountType, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.DiscountType, Model.DiscType, "Select one", htmlAttributes: new { @class = "form-control" })
-            <p class="text-danger" style="display: none" id="Error2"></p>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DiscountType, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.DiscountType, Model.DiscType, "Select one", htmlAttributes: new { @class = "form-control" })
+                <p class="text-danger" style="display: none" id="Error2"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.UserType, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.UserType, Model.UserTypeList, "Select one", htmlAttributes: new { @class = "form-control" })
-            <p class="text-danger" style="display: none" id="Error3"></p>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserType, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.UserType, Model.UserTypeList, "Select one", htmlAttributes: new { @class = "form-control" })
+                <p class="text-danger" style="display: none" id="Error3"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Percent_Discount, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Percent_Discount, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Percent_Discount, "", new { @class = "text-danger" })
-            <p class="text-danger" style="display: none" id="Error4"></p>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Percent_Discount, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Percent_Discount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Percent_Discount, "", new { @class = "text-danger" })
+                <p class="text-danger" style="display: none" id="Error4"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Min_spend, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Min_spend, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Min_spend, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Min_spend, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Min_spend, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Min_spend, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateStart, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
-            <p class="text-danger" style="display: none" id="ErrorDate1"></p>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateStart, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+                <p class="text-danger" style="display: none" id="ErrorDate1"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.ExpiryDate, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.ExpiryDate, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
-            <p class="text-danger" style="display: none" id="ErrorDate2"></p>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExpiryDate, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ExpiryDate, new { htmlAttributes = new { @class = "form-control", @Placeholder = "dd/MM/yyyy hh:mm am/pm" } })
+                <p class="text-danger" style="display: none" id="ErrorDate2"></p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 @if (ViewBag.Message != null)

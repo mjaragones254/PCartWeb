@@ -811,7 +811,6 @@ namespace PCartWeb.Controllers
             List<ReviewDisplay> reviewDisplays = new List<ReviewDisplay>();
             var user2 = User.Identity.GetUserId();
 
-
             var product = (from prod in dbase.ProductDetails
                            join categ in dbase.CategoryDetails
                            on prod.Category_Id equals categ.Id
@@ -927,7 +926,6 @@ namespace PCartWeb.Controllers
         [HttpPost]
         public ActionResult ItemDetails(string variation)
         {
-
             Int32 id = Convert.ToInt32(Session["ItemId"]);
             var get = Request["Qty"];
             var price = Request["Price"];
@@ -937,7 +935,6 @@ namespace PCartWeb.Controllers
             HomeDisplayModel model = new HomeDisplayModel();
             List<ReviewDisplay> reviewDisplays = new List<ReviewDisplay>();
             var user2 = User.Identity.GetUserId();
-
 
             var getvariations = dbase.PVariation.Where(x => x.ProdId == id).ToList();
             if (getvariations != null)
@@ -971,8 +968,6 @@ namespace PCartWeb.Controllers
             }
 
             var getprice = dbase.Prices.Where(x => x.ProdId == id && (x.VarId.ToString() == null || x.VarId == 0)).OrderByDescending(p => p.Id).FirstOrDefault();
-
-
             var getCost = dbase.Cost.Where(x => x.ProdId == product.Id).OrderByDescending(p => p.Id).FirstOrDefault();
             product.Product_cost = getCost.Cost;
             var getmanu = dbase.Manufacturer.Where(x => x.ProdId == product.Id).OrderByDescending(p => p.Id).FirstOrDefault();

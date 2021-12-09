@@ -65,26 +65,33 @@ namespace PCartWeb.Controllers
 
         public ActionResult CreateCommissionRate()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadComRate()
+        {
+            var data = new List<object>();
             var db = new ApplicationDbContext();
-            var model = new ViewCommissionTable();
             var commision = db.CommissionDetails.OrderByDescending(c => c.Id).ToList();
 
             if (commision != null)
             {
-                model.ViewCommisions = commision;
-                model.Rate = 0;
-            }
-            else
-            {
-                model.ViewCommisions = null;
-                model.Rate = 0;
+                foreach (var com in commision)
+                {
+                    data.Add(new
+                    {
+                        date = com.Updated_at.ToString(),
+                        comRate = com.Rate + " %"
+                    });
+                }
             }
 
-            return View(model);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult CreateCommissionRate(ViewCommissionTable model)
+        public ActionResult CreateCommissionRate(CommissionTable model)
         {
             var db = new ApplicationDbContext();
             var rate = new CommissionTable();
@@ -169,16 +176,65 @@ namespace PCartWeb.Controllers
             {
                 return RedirectToAction("CreateCommissionRate");
             }
-            var coop = db.CoopDetails.Where(p => p.Approval == "Pending").ToList();
 
-            return View(coop);
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadPendingCoop()
+        {
+            var data = new List<object>();
+            var db = new ApplicationDbContext();
+            var coops = db.CoopDetails.Where(p => p.Approval == "Pending").ToList();
+
+            if (coops != null)
+            {
+                foreach (var coop in coops)
+                {
+                    data.Add(new
+                    {
+                        name = coop.CoopName,
+                        address = coop.Address,
+                        contact = coop.Contact,
+                        dateCreated = coop.Coop_Created.ToString(),
+                        coopId = coop.Id
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ViewPendingAdminAccnts()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadPendingCoopAdmin()
+        {
+            var data = new List<object>();
             var db = new ApplicationDbContext();
-            var listofpendings = db.CoopAdminDetails.Where(x => x.Approval == null).ToList();
-            return View(listofpendings);
+            var coopAdmins = db.CoopAdminDetails.Where(x => x.Approval == null).ToList();
+
+            if (coopAdmins != null)
+            {
+                foreach (var coopAdmin in coopAdmins)
+                {
+                    data.Add(new
+                    {
+                        firstname = coopAdmin.Firstname,
+                        lastname = coopAdmin.Lastname,
+                        contact = coopAdmin.Contact,
+                        address = coopAdmin.Address,
+                        email = coopAdmin.Email,
+                        dateCreated = coopAdmin.Created_at.ToString(),
+                        coopAdminId = coopAdmin.ID
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult PendingAccntDetails(Int32 id)

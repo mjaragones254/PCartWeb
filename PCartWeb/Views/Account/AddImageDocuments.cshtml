@@ -1,5 +1,8 @@
 ﻿@model PCartWeb.Models.AddDocumentImages
 
+@{
+    ViewBag.Title = "Add Documents";
+}
 
 @using (Html.BeginForm("AddImageDocuments", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {

@@ -2,7 +2,7 @@
 @model dynamic
 
 @{
-    ViewBag.Title = "DetailsCoopReq";
+    ViewBag.Title = "Co-op Details";
     var ids = "";
     foreach (CoopViewModel coopView in Model.Users)
     {
@@ -12,13 +12,17 @@
 
 <head>
     <link rel="stylesheet" href="~/Content/css/customStyle.css">
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
 </head>
 
 <div class="container" style="margin-bottom: 50px;">
-    <h2 style="margin-top: 50px">Coop Details </h2>
-
-    <div style="margin-top: 20px; background-color: white; padding: 50px; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
+    <div style="margin-top: 30px; background-color: white; padding: 50px; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);">
         <form>
+            <h4 class="w-100 bg-dark py-3 text-center" style="margin-bottom: 20px;">Co-op Details</h4>
             <div class="form-row">
                 @foreach (CoopDocumentImages coopDocument in Model.Images)
                 {
