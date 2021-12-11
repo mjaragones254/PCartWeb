@@ -626,6 +626,27 @@ namespace PCartWeb.Controllers
             return View(commissions);
         }
 
+        public ActionResult OrderHistory()
+        {
+            var db = new ApplicationDbContext();
+            var user = User.Identity.GetUserId();
+            var getcoop = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
+            var getuserorders = db.UserOrders.Where(x => x.CoopId == getcoop.Coop_code && x.OStatus == "Complete" || x.CoopId == getcoop.Coop_code && x.OStatus == "Cancelled").ToList();
+            return View(getuserorders);
+        }
+
+        public ActionResult WithdrawRequestReports()
+        {
+            var db = new ApplicationDbContext();
+            var user = User.Identity.GetUserId();
+            var checkcoop = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
+            List<WithdrawRequest> getcompletetrans = new List<WithdrawRequest>();
+            if(checkcoop!=null)
+            {
+                getcompletetrans = db.Withdraw.Where(x => x.CoopId == checkcoop.Coop_code && x.RequestStatus != "Pending").OrderBy(p => p.RequestStatus).ToList();
+            }
+            return View(getcompletetrans);
+        }
         private bool ValidateFile(HttpPostedFileBase file)
         {
             string fileExtension = Path.GetExtension(file.FileName).ToLower();

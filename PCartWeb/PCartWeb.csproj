@@ -564,6 +564,8 @@
     <Content Include="Views\Home\ReturnRefundDetails.cshtml" />
     <Content Include="Views\Coopadmin\AddCat.cshtml" />
     <Content Include="Views\Paypalpayable\SuccessView.cshtml" />
+    <Content Include="Views\Coopadmin\WithdrawRequestReports.cshtml" />
+    <Content Include="Views\Coopadmin\OrderHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
