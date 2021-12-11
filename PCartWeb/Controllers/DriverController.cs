@@ -62,7 +62,7 @@ namespace PCartWeb.Controllers
                     }
                 }
                 decimal delfee = decimal.Parse(order.Deliveryfee.ToString());
-                deliveries.Add(new DeliveryListDisplay { OrderNo = order.OrderNo.ToString(), Customer = order.Customer, TotalAmount = total + delfee, CustomerId = order.CustomerId, PickupDate = order.Pickup });
+                deliveries.Add(new DeliveryListDisplay { OrderNo = order.OrderNo.ToString(), Customer = order.Customer, TotalAmount = total + delfee, CustomerId = order.CustomerId, PickupDate = order.Pickup, Mode = order.Mode });
             }
             var riderinfo = db.DriverDetails.Where(x => x.UserId == user).FirstOrDefault();
             var getcoop = db.CoopAdminDetails.Where(x => x.UserId == riderinfo.CoopId).FirstOrDefault();
@@ -151,7 +151,7 @@ namespace PCartWeb.Controllers
                         SubTotal = prod.SubTotal,
                         Qty = prod.Qty,
                         UserId = prod.UserId,
-                        ProdImage = getprod.Product_Name,
+                        ProdImage = getprod.Product_image,
                         ProdName = prod.ProdName
                     });
 

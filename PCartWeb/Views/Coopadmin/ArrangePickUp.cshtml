@@ -52,7 +52,7 @@
                     <input name="driverId" type="radio" value="@Model.Drivers[i].UserId" />
                 </td>
                 <td>
-                    <img src="@Url.Content("../Images/" + Model.Drivers[i].Image)" />
+                    <img src="@Url.Content("~/Images/" + Model.Drivers[i].Image)" width="50" height="50" />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => Model.Drivers[i].Firstname) @Html.DisplayFor(modelItem => Model.Drivers[i].Lastname)
