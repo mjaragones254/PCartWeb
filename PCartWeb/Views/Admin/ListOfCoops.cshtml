@@ -56,7 +56,7 @@
                     @Html.DisplayFor(modelItem => item.Coop_Updated)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "DetailsCoopReq", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "DisplayCoopDetailReq", new { id = item.Id }) |
                     @if (item.IsLocked == "Unlock")
                     {
                         @Html.ActionLink("Lock", "LockCoop", new { id = item.Id })
