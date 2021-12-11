@@ -122,46 +122,54 @@
             }
             else if (User.IsInRole("Coop Admin"))
             {
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Management
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="~/Coopadmin/ViewListCategory">Category</a>
-                            <a class="dropdown-item" href="~/Coopadmin/ViewListProduct">Products</a>
-                            <a class="dropdown-item" href="~/Coopadmin/ViewMemberList">Members</a>
-                            <a class="dropdown-item" href="~/Coopadmin/MembershipApplication">Membership Application</a>
-                            <a class="dropdown-item" href="~/Coopadmin/ViewDriverList">Delivery Riders</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Promos
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="~/Coopadmin/ViewListDiscount">Discounts</a>
-                            <a class="dropdown-item" href="~/Coopadmin/ViewVoucherList">Vouchers</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">@Html.ActionLink("Orders", "ViewOrderList", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Member Products", "ViewProdRequest", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Reports
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="~/Coopadmin/ViewCoopSales">COOP Sales</a>
-                            <a class="dropdown-item" href="~/Coopadmin/AccountPayables">Accounts Payable</a>
-                            <a class="dropdown-item" href="~/Coopadmin/TransactionReport">Pending Transactions</a>
-                            <a class="dropdown-item" href="~/Coopadmin/CommissionFeeReport">Commission Summary</a>
-                            <a class="dropdown-item" href="~/Coopadmin/ViewEwalletHistory">E-Wallet History</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">@Html.ActionLink("Notifications", "ViewNotification", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Inbox", "InboxChat", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">@Html.ActionLink("Home", "Index", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="~/Coopadmin/ViewListCategory">Category</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewListProduct">Products</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewMemberList">Members</a>
+                    <a class="dropdown-item" href="~/Coopadmin/MembershipApplication">Membership Application</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewDriverList">Delivery Riders</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Promos
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="~/Coopadmin/ViewListDiscount">Discounts</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewVoucherList">Vouchers</a>
+                </div>
+            </li>
+            <li class="nav-item">@Html.ActionLink("Orders", "ViewOrderList", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item">@Html.ActionLink("Member Products", "ViewProdRequest", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Transactions
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="~/Coopadmin/AccountPayables">Accounts Payable</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewOrderList">Order</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Reports
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="~/Coopadmin/ViewCoopSales">COOP Sales</a>
+                    <a class="dropdown-item" href="~/Coopadmin/CommissionFeeReport">Commission Summary</a>
+                    <a class="dropdown-item" href="~/Coopadmin/ViewEwalletHistory">E-Wallet History</a>
+                    <a class="dropdown-item" href="~/Coopadmin/CompletedPage">Order History</a>
+                </div>
+            </li>
+            <li class="nav-item">@Html.ActionLink("Notifications", "ViewNotification", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item">@Html.ActionLink("Inbox", "InboxChat", "Coopadmin", new { area = "" }, new { @class = "nav-link" })</li>
+        </ul>
                 <p id="numOfNotifications">0</p>
             }
             else if (User.IsInRole("Driver"))
