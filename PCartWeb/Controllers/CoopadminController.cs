@@ -869,6 +869,10 @@ namespace PCartWeb.Controllers
             {
                 ViewBag.Message = "Member's discount is added successfully.";
             }
+            else if(numMessage == 7)
+            {
+                ViewBag.ErrorMessage = "Please create member's discount.";
+            }
 
             if (checkForm.MembershipForm == null)
             {
@@ -3516,7 +3520,10 @@ namespace PCartWeb.Controllers
         [AllowAnonymous]
         public ActionResult CreateMember()
         {
+            var db = new ApplicationDbContext();
             var model = new RegisterViewModel();
+            var user = User.Identity.GetUserId();
+            var checkcoop = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
             model.GenderList = new SelectList(new List<SelectListItem>
             {
                 new SelectListItem {Selected = false, Text = "Male", Value = "Male"},
@@ -3524,7 +3531,11 @@ namespace PCartWeb.Controllers
                 new SelectListItem {Selected = false, Text = "LGBTQ", Value = "LGBTQ"},
                 new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
             }, "Value", "Text", 1);
-
+            var checkmemberdisc = db.CoopMemberDiscounts.Where(x => x.COOP_ID == checkcoop.Coop_code).ToList();
+            if(checkmemberdisc.Count == 0)
+            {
+                ViewBag.Errormessage = "Please create member's discount first. Thank you.";
+            }
             return View(model);
         }
 
@@ -3534,6 +3545,7 @@ namespace PCartWeb.Controllers
         public async Task<ActionResult> CreateMember(RegisterViewModel model, HttpPostedFileBase file)
         {
             int gen = 0;
+            var db2 = new ApplicationDbContext();
             model.GenderList = new SelectList(new List<SelectListItem>
             {
                 new SelectListItem {Selected = false, Text = "Male", Value = "Male"},
@@ -3541,6 +3553,13 @@ namespace PCartWeb.Controllers
                 new SelectListItem {Selected = false, Text = "LGBTQ", Value = "LGBTQ"},
                 new SelectListItem {Selected = false, Text = "Rather Not Say", Value = "Rather Not Say"}
             }, "Value", "Text", 1);
+            var user3 = User.Identity.GetUserId();
+            var checkcoop = db2.CoopAdminDetails.Where(x => x.UserId == user3).FirstOrDefault();
+            var checkmemberdisc = db2.CoopMemberDiscounts.Where(x => x.COOP_ID == checkcoop.Coop_code).ToList();
+            if (checkmemberdisc.Count == 0)
+            {
+                return RedirectToAction("MembershipApplication", new { numMessage = 5 });
+            }
             if (model.Gender == null)
             {
                 gen = 1;
@@ -3568,7 +3587,7 @@ namespace PCartWeb.Controllers
                 string id = user2.Id;
                 userid = id;
                 var coopAdmin = db4.CoopAdminDetails.Where(x => x.UserId == userid).FirstOrDefault();
-                var db2 = new ApplicationDbContext();
+                
                 if (result.Succeeded)
                 {
                     var allowedExtensions = new[] {

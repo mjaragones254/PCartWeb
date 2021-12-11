@@ -17,6 +17,7 @@
     </style>
 </head>
 
+<p style="color:red;">@ViewBag.Errormessage</p>
 
 <div class="custom-form-1 mt-5 w-75 mx-md-auto">
     @using (Html.BeginForm("CreateMember", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
