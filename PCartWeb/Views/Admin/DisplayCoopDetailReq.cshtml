@@ -110,7 +110,7 @@
                         <button type="button" onclick="location.href='@Url.Action("RejectReqAccnt", "Admin", new { id = ids })'" class="btn btn-warning">Reject</button>
                         @Html.ActionLink("Back to List", "ViewPendingCoop", "", htmlAttributes: new { @class = "btn btn-primary float-right" })
                     }
-                    else
+                    else if(coopView.Approval == "Approved")
                     {
                         <h6 class="text-danger">You already approved this COOP.</h6>
                     }
