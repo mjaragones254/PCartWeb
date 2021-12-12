@@ -1,0 +1,35 @@
+﻿@model IEnumerable<PCartWeb.Models.CommissionTable>
+
+@{
+    ViewBag.Title = "ViewCommissionRateReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Commission Rates Report</h2>
+
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated_at)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+

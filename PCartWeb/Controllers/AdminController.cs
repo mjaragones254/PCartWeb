@@ -131,6 +131,13 @@ namespace PCartWeb.Controllers
             return true;
         }
 
+        public ActionResult ViewCommissionRateReport()
+        {
+            var db = new ApplicationDbContext();
+            var commrates = db.CommissionDetails.OrderByDescending(p => p.Id).ToList();
+            return View(commrates);
+        }
+
         public ActionResult Index()
         {
             var db = new ApplicationDbContext();
