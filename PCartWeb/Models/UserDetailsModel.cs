@@ -305,6 +305,7 @@ namespace PCartWeb.Models
         public int Id { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special characters are not allowed.")]
         [Display(Name = "Name")]
         public string Product_Name { get; set; }
         [Required]

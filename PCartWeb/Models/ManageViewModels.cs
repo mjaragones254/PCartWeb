@@ -152,6 +152,7 @@ namespace PCartWeb.Models
     public class AdminAddProductViewModel
     {
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special characters are not allowed.")]
         [Display(Name = "Product Name")]
         public string Product_name { get; set; }
         [Display(Name = "Upload Main Picture")]
@@ -217,6 +218,7 @@ namespace PCartWeb.Models
     public class AddCategoryViewModel
     {
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special characters are not allowed.")]
         [Display(Name = "Category Name")]
         public string Cat_name { get; set; }
 
