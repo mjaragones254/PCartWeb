@@ -217,10 +217,12 @@ namespace PCartWeb.Models
         public string Email { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special characters are not allowed.")]
         [Display(Name = "Firstname")]
         public string Firstname { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special characters are not allowed.")]
         [Display(Name = "Lastname")]
         public string Lastname { get; set; }
         [Display(Name = "Upload Profile")]
