@@ -4185,6 +4185,7 @@ namespace PCartWeb.Controllers
             var viewprof = db.CoopAdminDetails.Where(x => x.ID == id).FirstOrDefault();
             var location = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
             var myprofile = new RegisterCoopAdminViewmodel();
+            myprofile.Image = viewprof.Image;
             myprofile.Address = viewprof.Address;
             myprofile.Bdate = viewprof.Bdate;
             myprofile.Contact = viewprof.Contact;
@@ -4234,6 +4235,33 @@ namespace PCartWeb.Controllers
             }, "Value", "Text", 1);
             var getuser = db1.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
             var location = db3.Locations.Where(x => x.UserId == user).FirstOrDefault();
+            string[] genders = { "Male", "Female", "LGBTQ", "Rather Not Say" };
+            string[] statuslist = { "Single", "Married", "Divorced", "Separated", "Widowed" };
+            int flag = 0;
+            if(!genders.Contains(model.Gender))
+            {
+                flag = 1;
+                ViewBag.Errormessage = "Please select a proper value.";
+            }
+            if(!statuslist.Contains(model.CStatus))
+            {
+                flag = 1;
+            }
+            if(flag != 0)
+            {
+                model.Image = getuser.Image;
+                model.Address = getuser.Address;
+                model.Bdate = getuser.Bdate;
+                model.Contact = getuser.Contact;
+                model.CStatus = getuser.Status;
+                model.Firstname = getuser.Firstname;
+                model.Lastname = getuser.Lastname;
+                model.Latitude = location.Geolocation.Latitude.ToString();
+                model.Longitude = location.Geolocation.Longitude.ToString();
+                model.Gender = getuser.Gender;
+                return View(model);
+            }
+            
             if (model.ImageFile == null)
             {
                 getuser.Image = getuser.Image;
