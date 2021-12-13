@@ -368,7 +368,7 @@ namespace PCartWeb.Controllers
             return View(viewmodel);
         }
         [HttpPost]
-        public ActionResult EditDriverProfile(RegisterDriverViewModel model)
+        public ActionResult EditDriverProfile(RegisterDriverViewModel model, HttpPostedFileBase file, HttpPostedFileBase file2)
         {
             var db = new ApplicationDbContext();
             var db2 = new ApplicationDbContext();
