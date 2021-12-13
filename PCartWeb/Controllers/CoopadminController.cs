@@ -4241,11 +4241,12 @@ namespace PCartWeb.Controllers
             if(!genders.Contains(model.Gender))
             {
                 flag = 1;
-                ViewBag.Errormessage = "Please select a proper value.";
+                ViewBag.ErrorGender = "Please select a proper value.";
             }
             if(!statuslist.Contains(model.CStatus))
             {
                 flag = 1;
+                ViewBag.ErrorStatus = "Please select a proper value.";
             }
             if(flag != 0)
             {
