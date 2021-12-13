@@ -4212,7 +4212,7 @@ namespace PCartWeb.Controllers
             return View(myprofile);
         }
         [HttpPost]
-        public ActionResult EditMyProfile(RegisterCoopAdminViewmodel model)
+        public ActionResult EditMyProfile(RegisterCoopAdminViewmodel model, HttpPostedFileBase file)
         {
             var db1 = new ApplicationDbContext();
             var db3 = new ApplicationDbContext();
