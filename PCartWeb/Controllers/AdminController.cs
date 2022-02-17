@@ -63,8 +63,18 @@ namespace PCartWeb.Controllers
             }
         }
 
-        public ActionResult CreateCommissionRate()
+        public ActionResult CreateCommissionRate(string mess, string errorMess)
         {
+            if (mess != "")
+            {
+                ViewBag.Message = mess;
+            }
+
+            if (errorMess != "")
+            {
+                ViewBag.Error = errorMess;
+            }
+
             return View();
         }
 
@@ -94,11 +104,46 @@ namespace PCartWeb.Controllers
         public ActionResult CreateCommissionRate(CommissionTable model)
         {
             var db = new ApplicationDbContext();
+            var currentRate = db.CommissionDetails.OrderByDescending(x => x.Id).FirstOrDefault();
+            var comRate = db.CommissionDetails.Count();
             var rate = new CommissionTable();
-            rate.Rate = model.Rate;
-            rate.Updated_at = DateTime.Now;
-            db.CommissionDetails.Add(rate);
-            db.SaveChanges();
+            var message = "";
+            var errorMess = "";
+            var flag = 0;
+
+            if (currentRate != null)
+            {
+                if (model.Rate == currentRate.Rate)
+                {
+                    flag = 1;
+                    errorMess = "The current rate is already " + model.Rate + " %.";
+                }
+                else
+                {
+                    flag = 0;
+                }
+            }
+            else
+            {
+                flag = 0;
+            }
+
+            if (flag == 0)
+            {
+                rate.Rate = model.Rate;
+                rate.Updated_at = DateTime.Now;
+                db.CommissionDetails.Add(rate);
+                db.SaveChanges();
+
+                if (comRate != 0)
+                {
+                    message = "Commission rate is updated successfully.";
+                }
+                else
+                {
+                    message = "Commission rate is updated successfully.";
+                }
+            }
 
             var notif = new NotificationModel
             {
@@ -116,7 +161,7 @@ namespace PCartWeb.Controllers
             NotificationHub objNotifHub = new NotificationHub();
             objNotifHub.SendNotification(notif.ToRole);
 
-            return RedirectToAction("CreateCommissionRate");
+            return RedirectToAction("CreateCommissionRate", new { mess = message, errorMess = errorMess });
         }
 
         public bool CheckCoop(string name)
@@ -276,7 +321,7 @@ namespace PCartWeb.Controllers
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
 
-                //Notify Coop shops if their application is approved.
+                //Notify Coop shops if their application is denied.
                 MailMessage msg = new MailMessage();
                 msg.From = new MailAddress(ConfigurationManager.AppSettings["AdminEmail"].ToString());
                 msg.To.Add(new MailAddress(getemail.Email));
@@ -516,6 +561,7 @@ namespace PCartWeb.Controllers
                     " due to lack the of documents. <br />You can still apply and comply the requirements stated in the COOP application page.</h4><h4>By: PCart Online Management</h4>";
                 #endregion
                 coop.Approval = "Denied";
+                coop.Coop_Updated = DateTime.Now;
                 user.Approval = "Denied";
                 var logs = new UserLogs();
                 var userrole = getemail.Roles.Where(x => x.UserId == getemail.Id).FirstOrDefault();
@@ -607,6 +653,7 @@ namespace PCartWeb.Controllers
                 string html = "<br/><h4>You are now officialy registered as a COOP in PCart Shopping. You can now login at anytime.</h4><h4>By: PCart Online Management</h4>";
                 #endregion
                 coop.Approval = "Approved";
+                coop.Coop_Updated = DateTime.Now;
                 user.Approval = "Approved";
                 var logs = new UserLogs();
                 var userrole = getemail.Roles.Where(x => x.UserId == getemail.Id).FirstOrDefault();
@@ -651,13 +698,41 @@ namespace PCartWeb.Controllers
             return RedirectToAction("ViewPendingCoop");
         }
 
-        public ActionResult ListOfCoops()
+        public ActionResult ListOfCoops(string mess)
         {
+            if (mess != null || mess != "")
+            {
+                ViewBag.Message = mess;
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadCoopList()
+        {
+            var data = new List<object>();
             var db = new ApplicationDbContext();
+            var coops = db.CoopDetails.Where(x => x.Approval == "Approved").ToList();
 
-            var listofcoops = db.CoopDetails.Where(x => x.Approval == "Approved").ToList();
+            if (coops != null)
+            {
+                foreach (var coop in coops)
+                {
+                    data.Add(new
+                    {
+                        name = coop.CoopName,
+                        address = coop.Address,
+                        contact = coop.Contact,
+                        dateCreated = coop.Coop_Created.ToString(),
+                        dateUpdated = coop.Coop_Updated.ToString(),
+                        isLocked = coop.IsLocked,
+                        coopId = coop.Id
+                    });
+                }
+            }
 
-            return View(listofcoops);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult LockCoop(int? id)
@@ -668,6 +743,7 @@ namespace PCartWeb.Controllers
             var getcoopdetail = db.CoopAdminDetails.Where(x => x.Coop_code == getcoop.Id).FirstOrDefault();
             var getmembers = db.UserDetails.Where(x => x.CoopId == getcoopdetail.UserId).ToList();
             var getemail1 = db.Users.Where(x => x.Id == getcoopdetail.UserId).FirstOrDefault();
+
             if (getcoop != null)
             {
                 getcoop.IsLocked = "Locked";
@@ -683,6 +759,7 @@ namespace PCartWeb.Controllers
                 db.Entry(getcoop).State = EntityState.Modified;
                 db.SaveChanges();
             }
+
             #region formatter
             string text = string.Format("Good Day our COOP Managers/Admins!", "Account Lock Information", "We temporarily lock your account due to severe violations.");
             string html = "<br/><h4>We will be notifying you through email once we have unlocked your account. Thank you, and have a great day ahead.</h4>";
@@ -738,7 +815,7 @@ namespace PCartWeb.Controllers
                 }
             }
 
-            return RedirectToAction("ListOfCoops");
+            return RedirectToAction("ListOfCoops", new { mess = getcoop.CoopName + " account has been locked." });
         }
 
         public ActionResult UnlockCoop(int? id)
@@ -821,7 +898,7 @@ namespace PCartWeb.Controllers
                 }
             }
 
-            return RedirectToAction("ListOfCoops");
+            return RedirectToAction("ListOfCoops", new { mess = getcoop.CoopName + " account has been unlocked." });
         }
 
         public List<UserOrder> GetUserOrders(string coop)
@@ -1351,6 +1428,7 @@ namespace PCartWeb.Controllers
                         CoopName = coop.CoopName
                     });
                 }
+
                 withdraw.ViewModel = requests;
             }
 

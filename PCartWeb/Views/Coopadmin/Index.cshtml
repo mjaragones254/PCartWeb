@@ -23,6 +23,13 @@
     }
 }
 
+<style>
+    .center {
+        margin: auto;
+        padding: 10px;
+    }
+</style>
+
 <div class="container">
     <h2 style="margin: 25px 0 25px 0;">@coopname</h2>
     <p style="color:red;">@ViewBag.ErrorMessage</p>
@@ -37,10 +44,10 @@
                 Amount: <b>₱ <a>@ewallet</a></b>
             </div>
             <div class="col-md-2">
-                <b><a href="#" data-toggle="modal" data-target="#exampleModal"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw via Paypal</a></b>
+                <b><a href="#" data-toggle="modal" data-target="#exampleModal"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw</a></b>
             </div>
-            <div class="col-md-2">
-                <b><a href="#" data-toggle="modal" data-target="#exampleModal2"><img src="~/Images/withdraw.png" name="withdraw icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;Withdraw via Remittance</a></b>
+            <div class="col-md-4">
+                <b><a href="~/Coopadmin/ViewEwalletHistory"><img src="~/Images/eWalletHistory.png" name="history icon" width="32" alt="withdraw icon" />&nbsp;&nbsp;History</a></b>
             </div>
         </div>
         <hr />
@@ -106,9 +113,30 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Withdraw Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body center">
+                <button data-toggle="modal" data-target="#exampleModal1" class="btn btn-primary">&nbsp;&nbsp;via Paypal</button>
+                <button data-toggle="modal" data-target="#exampleModal2" class="btn btn-primary">&nbsp;&nbsp;via Remittance</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @using (Html.BeginForm())
 {
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

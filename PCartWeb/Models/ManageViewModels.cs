@@ -223,7 +223,7 @@ namespace PCartWeb.Models
         public string Cat_name { get; set; }
 
         [Required]
-        [Display(Name = "Category Description")]
+        [Display(Name = "Description")]
         public string Cat_desc { get; set; }
     }
 

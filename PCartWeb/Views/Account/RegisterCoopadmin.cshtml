@@ -129,7 +129,7 @@
                                             @Html.LabelFor(model => model.CStatus, htmlAttributes: new { @class = "control-label col-md-5" })
                                             <div class="col-md-10">
                                                 @Html.DropDownListFor(vm => vm.CStatus, Model.CStatusList, "-Please Select-", htmlAttributes: new { @class = "form-control" })
-                                                <p class="text-danger"style="display: none; font-size: 16px;" id="StatusError"></p>
+                                                <p class="text-danger" style="display: none; font-size: 16px;" id="StatusError"></p>
                                             </div>
                                         </div>
 
@@ -175,20 +175,12 @@
                                         <div>
                                             @Html.HiddenFor(m => m.RememberMe)
                                         </div>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col">
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group row">
-                                                        <div>
-                                                            <input type="submit" value="Apply and Proceed" class="btn btn-primary" style="width:200px" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                </div>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group text-center">
+                                            <input type="submit" value="Apply and Proceed" class="btn btn-primary" style="width:200px" />
                                         </div>
                                     </div>
                                 </div>

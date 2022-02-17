@@ -10,6 +10,12 @@
         h4 {
             color: white;
         }
+
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -17,7 +23,10 @@
     <div class="form-horizontal">
         <h4 class="w-100 bg-dark py-3 text-center">Co-op Applications</h4>
         <hr />
-        <h4 class="mb-0"><button class="btn btn-primary" onclick="location.href = '@Url.Action("ViewPendingAdminAccnts", "Admin")'">View Pending Co-op Admin Application</button></h4>
+        <div class="center">
+            <button style="margin-right: 50px;" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("ListOfCoops", "Admin")'"> Co-op List</button>
+            <button class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("ViewPendingAdminAccnts", "Admin")'">View Pending Co-op Admin Application</button>
+        </div>
         <br />
 
         <script src="~/Scripts/jquery-1.10.2.min.js"></script>

@@ -1,76 +1,73 @@
 ﻿@model IEnumerable<PCartWeb.Models.DriverDetailsModel>
 
 @{
-    ViewBag.Title = "ViewDriverList";
+    ViewBag.Title = "List of Drivers";
 }
 
-<h2>Driver List</h2>
-
 <head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css" />
     <style>
-        th {
+        h4 {
             color: white;
         }
     </style>
 </head>
 
-<p>
-    @Html.ActionLink("Create New", "CreateDriver")
-</p>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">List of Drivers</h4>
+        <button style="margin-bottom: 10px" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("CreateDriver", "Coopadmin")'">Add Driver</button>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Coopadmin/LoadDriver",
+                    function (data) {
+                        var tr;
 
-<div class="table-responsive table-hover">
-    <table class="table">
-        <tr class="bg-dark">
-            <th>
-                @Html.DisplayNameFor(model => model.Firstname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lastname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contact)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlateNum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created_at)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated_at)
-            </th>
-            <th></th>
-        </tr>
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].firstname + "</td>");
+                            tr.append("<td>" + data[i].lastname + "</td>");
+                            tr.append("<td>" + data[i].address + "</td>");
+                            tr.append("<td>" + data[i].contactNo + "</td>");
+                            tr.append("<td>" + data[i].plateNo + "</td>");
+                            tr.append("<td>" + data[i].created_at + "</td>");
+                            tr.append("<td>" + data[i].updated_at + "</td>");
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Firstname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lastname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contact)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created_at)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated_at)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "EditDriver", new { id = item.Id })
-                </td>
-            </tr>
-        }
+                            if (data[i].isActive == "Active") {
+                                tr.append("<td>" + '<a href="@Url.Action("EditDriver", "Coopadmin")?id=' + data[i].id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("DetailsOfUser", "Coopadmin")?id=' + data[i].id + '">Details</a>' + ' | ' + '<a href="@Url.Action("DeactivateMember", "Coopadmin")?id=' + data[i].id + '">Deactivate</a>' + "</td>");
+                            }
+                            else {
+                                tr.append("<td>" + '<a href="@Url.Action("EditDriver", "Coopadmin")?id=' + data[i].id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("DetailsOfUser", "Coopadmin")?id=' + data[i].id + '">Details</a>' + ' | ' + '<a href="@Url.Action("ActivateMember", "Coopadmin")?id=' + data[i].id + '">Activate</a>' + "</td>");
+                            }
 
-    </table>
+                            $('.table').append(tr);
+                        }
+
+                        $('#driverList').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="driverList">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Address</th>
+                        <th>Contact No.</th>
+                        <th>Plate No.</th>
+                        <th>Date Created</th>
+                        <th>Date Updated</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </div>

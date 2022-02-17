@@ -1,77 +1,75 @@
-﻿@model IEnumerable<PCartWeb.Models.ViewListProd>
-
-@{
-    ViewBag.Title = "ViewListProduct";
+﻿@{
+    ViewBag.Title = "List of Products";
 }
 
-<h4>List of Product</h4>
-<hr />
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        th {
+        h4 {
             color: white;
+        }
+
+        .origprice {
+            text-decoration: line-through;
         }
     </style>
 </head>
 
-<div class="container">
-    <p>
-        @Html.ActionLink("Create New", "AddProduct")
-    </p>
-    <div class="table-responsive table-hover">
-        <table class="table">
-            <tr class="bg-dark">
-                <th>
-                    @Html.DisplayNameFor(model => model.Product_name)
-                </th>
-                <th>
-                    Stocks on hand
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Product_price)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Category)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Created_at)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Updated_at)
-                </th>
-                <th></th>
-            </tr>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">List of Products</h4>
+        <button style="margin-bottom: 10px" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("AddProduct", "Coopadmin")'">Create New</button>
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product_name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product_qty)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product_price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Created_at)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Updated_at)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "EditProduct", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "ProdDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id })
-                    </td>
-                </tr>
-            }
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Coopadmin/LoadProducts",
+                    function (data) {
+                        var tr;
 
-        </table>
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].Product_name + "</td>");
+                            tr.append("<td>" + data[i].Product_qty + "</td>");
+
+                            if (data[i].DiscountPrice != 0) {
+                                tr.append("<td>" + "<p class='origprice'>&#8369; " + data[i].Product_price + " </p>" + "&#8369; " + data[i].DiscountPrice + "</td>");
+                            }
+                            else {
+                                tr.append("<td>" + data[i].Product_price + "</td>");
+                            }
+
+                            tr.append("<td>" + data[i].Category + "</td>");
+                            tr.append("<td>" + data[i].Created_at + "</td>");
+                            tr.append("<td>" + data[i].Updated_at + "</td>");
+                            tr.append("<td>" + '<a href="@Url.Action("EditProduct", "Coopadmin")?id=' + data[i].Id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("ProdDetails", "Coopadmin")?id=' + data[i].Id + '">Details</a>' + ' | ' + '<a href="@Url.Action("DeleteProduct", "Coopadmin")?id=' + data[i].Id + '">Delete</a>' + "</td>");
+
+                            $('.table').append(tr);
+                        }
+
+                        $('#productList').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="productList">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Stocks</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Date Uploaded</th>
+                        <th>Date Updated</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>

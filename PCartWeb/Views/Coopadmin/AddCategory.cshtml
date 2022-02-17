@@ -1,10 +1,8 @@
 ﻿@model PCartWeb.Models.AddCategoryViewModel
 
 @{
-    ViewBag.Title = "AddCategory";
+    ViewBag.Title = "Add Category";
 }
-
-<h2>AddCategory</h2>
 
 @using (Html.BeginForm())
 {
@@ -43,7 +41,7 @@
             <div class="form-group">
                 <input type="hidden" name="redirect" value="" />
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="Create" class="btn btn-secondary" />
                 </div>
             </div>
         </div>

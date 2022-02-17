@@ -697,6 +697,64 @@ namespace PCartWeb.Controllers
             return View(product);
         }
 
+        [HttpGet]
+        public JsonResult LoadProdRequest()
+        {
+            var data = new List<object>();
+            var db = new ApplicationDbContext();
+            var user2 = User.Identity.GetUserId();
+            var getcoop = db.CoopAdminDetails.Where(x => x.UserId == user2).FirstOrDefault();
+            var prices = db.Prices.ToList();
+            var products = (from prod in db.ProductDetails
+                           join categ in db.CategoryDetails
+                           on prod.Category_Id equals categ.Id
+                           join customer in db.UserDetails
+                           on prod.CustomerId equals customer.AccountId
+                           where prod.Product_status == "Request" &&
+                           customer.CoopId == getcoop.Coop_code.ToString()
+                           select new ViewProdReqList
+                           {
+                               Id = prod.Id,
+                               CustomerName = customer.Firstname + " " + customer.Lastname,
+                               Product_name = prod.Product_Name,
+                               Product_qty = prod.Product_qty,
+                               Category = categ.Name,
+                               Created_at = prod.Prod_Created_at.ToString(),
+                               Updated_at = prod.Prod_Updated_at.ToString(),
+                               Image = prod.Product_image
+                           }).ToList();
+
+            foreach (var item in products)
+            {
+                var getprice = db.Prices.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                item.Product_price = getprice.Price;
+                var getcost = db.Cost.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                item.Product_cost = getcost.Cost;
+                var getmanufacturer = db.Manufacturer.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                item.Product_manufact = getmanufacturer.Manufacturer;
+            }
+
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    data.Add(new
+                    {
+                        id = product.Id,
+                        memName = product.CustomerName,
+                        itemName = product.Product_name,
+                        qty = product.Product_qty,
+                        price = product.Product_price,
+                        category = product.Category,
+                        created_at = product.Created_at,
+                        updated_at = product.Updated_at,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult RequestDetails(int? id)
         {
             var db = new ApplicationDbContext();
@@ -813,12 +871,61 @@ namespace PCartWeb.Controllers
 
         public ActionResult ViewDriverList()
         {
-            var db = new ApplicationDbContext();
-            var user = User.Identity.GetUserId();
-            var coopAdminDetails = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
-            var driver = db.DriverDetails.Where(p => p.CoopId == coopAdminDetails.Coop_code.ToString()).ToList();
+            Session.Abandon();
+            Session.Clear();
+            Session.RemoveAll();
 
-            return View(driver);
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadDriver()
+        {
+            var data = new List<object>();
+            var db = new ApplicationDbContext();
+            var user2 = User.Identity.GetUserId();
+            var coopAdminDetails = db.CoopAdminDetails.Where(x => x.UserId == user2).FirstOrDefault();
+            var coopDetails = db.CoopDetails.Where(x => x.Id == coopAdminDetails.Coop_code).FirstOrDefault();
+
+            var drivers = (from d in db.DriverDetails
+                           join user in db.Users
+                           on d.UserId equals user.Id
+                           where d.CoopId == coopDetails.Id.ToString()
+                           select new DriverDetails2
+                           {
+                               Id = d.Id,
+                               Firstname = d.Firstname,
+                               Lastname = d.Lastname,
+                               Address = d.Address,
+                               ContactNo = d.Contact,
+                               PlateNo = d.PlateNum,
+                               IsActive = d.IsActive,
+                               UserId = d.UserId,
+                               Created_at = d.Created_at.ToString(),
+                               Updated_at = d.Updated_at.ToString()
+                           }).ToList();
+
+            if (drivers != null)
+            {
+                foreach (var driver in drivers)
+                {
+                    data.Add(new
+                    {
+                        id = driver.Id,
+                        firstname = driver.Firstname,
+                        lastname = driver.Lastname,
+                        address = driver.Address,
+                        contactNo = driver.ContactNo,
+                        plateNo = driver.PlateNo,
+                        isActive = driver.IsActive,
+                        accountId = driver.UserId,
+                        created_at = driver.Created_at,
+                        updated_at = driver.Updated_at,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ViewMemberList()
@@ -826,12 +933,20 @@ namespace PCartWeb.Controllers
             Session.Abandon();
             Session.Clear();
             Session.RemoveAll();
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadMember()
+        {
+            var data = new List<object>();
             var db = new ApplicationDbContext();
             var user2 = User.Identity.GetUserId();
             var coopAdminDetails = db.CoopAdminDetails.Where(x => x.UserId == user2).FirstOrDefault();
             var coopDetails = db.CoopDetails.Where(x => x.Id == coopAdminDetails.Coop_code).FirstOrDefault();
 
-            var person = (from u in db.UserDetails
+            var members = (from u in db.UserDetails
                           join user in db.Users
                           on u.AccountId equals user.Id
                           where u.Role == "Member" &&
@@ -849,7 +964,25 @@ namespace PCartWeb.Controllers
                               Role = u.Role
                           }).ToList();
 
-            return View(person);
+            if (members != null)
+            {
+                foreach (var member in members)
+                {
+                    data.Add(new
+                    {
+                        id = member.Id,
+                        firstname = member.Firstname,
+                        lastname = member.Lastname,
+                        isActive = member.IsActive,
+                        accountId = member.AccountId,
+                        email = member.Email,
+                        created_at = member.Created_at,
+                        updated_at = member.Updated_at,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult MembershipApplication(int? numMessage)
@@ -1053,10 +1186,16 @@ namespace PCartWeb.Controllers
             Session.Abandon();
             Session.Clear();
             Session.RemoveAll();
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadProducts()
+        {
+            var data = new List<object>();
             var user = User.Identity.GetUserId();
             var db = new ApplicationDbContext();
-            List<ViewListProd> viewListProds = new List<ViewListProd>();
-            List<PriceTable> price = new List<PriceTable>();
             List<int> productID = new List<int>();
             var coopAdmin = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
             var discountCheck = db.DiscountModels.Where(x => x.UserID == user).ToList();
@@ -1077,73 +1216,71 @@ namespace PCartWeb.Controllers
                                Updated_at = prod.Prod_Updated_at.ToString()
                            }).ToList();
 
-            foreach (var disCheck in discountCheck)
+            if (product != null)
             {
-                CultureInfo culture = new CultureInfo("es-ES");
-                var dateStart = Convert.ToDateTime(disCheck.DateStart, culture);
-                var dateEnd = Convert.ToDateTime(disCheck.DateEnd, culture);
-                if (DateTime.Now.Ticks >= dateStart.Ticks && DateTime.Now.Ticks < dateEnd.Ticks)
+                foreach (var disCheck in discountCheck)
                 {
-                    foreach (var item in product)
+                    CultureInfo culture = new CultureInfo("es-ES");
+                    var dateStart = Convert.ToDateTime(disCheck.DateStart, culture);
+                    var dateEnd = Convert.ToDateTime(disCheck.DateEnd, culture);
+                    if (DateTime.Now.Ticks >= dateStart.Ticks && DateTime.Now.Ticks < dateEnd.Ticks)
                     {
-                        var discountProdCheck = db.DiscountedProducts.Where(x => x.DiscountID == disCheck.Id && x.ProductId == item.Id).FirstOrDefault();
-
-                        if (discountProdCheck != null)
+                        foreach (var item in product)
                         {
-                            var getprice = db.Prices.Where(x => x.ProdId == item.Id && (x.VarId.ToString() == null || x.VarId == 0)).OrderByDescending(p => p.Id).FirstOrDefault();
-                            var getCost = db.Cost.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
-                            var getmanu = db.Manufacturer.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                            var discountProdCheck = db.DiscountedProducts.Where(x => x.DiscountID == disCheck.Id && x.ProductId == item.Id).FirstOrDefault();
 
-                            decimal discountPrice = getprice.Price * (Convert.ToDecimal(disCheck.Percent) / 100);
-                            decimal prodPrice = getprice.Price - discountPrice;
-                            viewListProds.Add(new ViewListProd
+                            if (discountProdCheck != null)
                             {
-                                Id = item.Id,
-                                DiscountPrice = decimal.Round(prodPrice, 2, MidpointRounding.AwayFromZero),
-                                Product_name = item.Product_name,
-                                Product_desc = item.Product_desc,
-                                Product_price = getprice.Price - discountPrice,
-                                Product_manufact = getmanu.Manufacturer,
-                                Product_qty = item.Product_qty,
-                                Product_cost = getCost.Cost,
-                                Category = item.Category,
-                                Created_at = item.Created_at,
-                                Updated_at = item.Updated_at
-                            });
+                                var getprice = db.Prices.Where(x => x.ProdId == item.Id && (x.VarId.ToString() == null || x.VarId == 0)).OrderByDescending(p => p.Id).FirstOrDefault();
+                                var getCost = db.Cost.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                                var getmanu = db.Manufacturer.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
 
-                            productID.Add(item.Id);
+                                decimal discountPrice = getprice.Price * (Convert.ToDecimal(disCheck.Percent) / 100);
+                                decimal prodPrice = getprice.Price - discountPrice;
+                                data.Add(new
+                                {
+                                    Id = item.Id,
+                                    Product_name = item.Product_name,
+                                    Product_qty = item.Product_qty,
+                                    DiscountPrice = decimal.Round(prodPrice, 2, MidpointRounding.AwayFromZero),
+                                    Product_price = getprice.Price,
+                                    Category = item.Category,
+                                    Created_at = item.Created_at,
+                                    Updated_at = item.Updated_at,
+                                });
+
+                                productID.Add(item.Id);
+                            }
                         }
                     }
                 }
-            }
 
-            foreach (var item in product)
-            {
-                if (!productID.Contains(item.Id))
+                foreach (var item in product)
                 {
-                    var getprice = db.Prices.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
-                    var getCost = db.Cost.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
-                    var getmanu = db.Manufacturer.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
-
-                    viewListProds.Add(new ViewListProd
+                    if (!productID.Contains(item.Id))
                     {
-                        Id = item.Id,
-                        Product_name = item.Product_name,
-                        Product_desc = item.Product_desc,
-                        Product_price = getprice.Price,
-                        Product_manufact = getmanu.Manufacturer,
-                        Product_qty = item.Product_qty,
-                        Product_cost = getCost.Cost,
-                        Category = item.Category,
-                        Created_at = item.Created_at,
-                        Updated_at = item.Updated_at
-                    });
+                        var getprice = db.Prices.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                        var getCost = db.Cost.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+                        var getmanu = db.Manufacturer.Where(x => x.ProdId == item.Id).OrderByDescending(p => p.Id).FirstOrDefault();
+
+                        data.Add(new
+                        {
+                            Id = item.Id,
+                            Product_name = item.Product_name,
+                            Product_qty = item.Product_qty,
+                            DiscountPrice = 0,
+                            Product_price = getprice.Price,
+                            Category = item.Category,
+                            Created_at = item.Created_at,
+                            Updated_at = item.Updated_at
+                        });
+                    }
                 }
+
+                productID.Clear();
             }
 
-            productID.Clear();
-
-            return View(viewListProds);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ProdDetails(int? id)
@@ -2350,66 +2487,30 @@ namespace PCartWeb.Controllers
 
         public ActionResult ViewListCategory()
         {
-            var db = new ApplicationDbContext();
-
-            var category = (from cat in db.CategoryDetails
-                            select new CategoryViewModel
-                            {
-                                Id = cat.Id,
-                                Cat_name = cat.Name,
-                                Cat_desc = cat.Description
-                            }).ToList();
-
-            return View(category);
-        }
-
-        [AllowAnonymous]
-        public ActionResult AddCat()
-        {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult AddCat(AddCategoryViewModel model)
+        [HttpGet]
+        public JsonResult LoadCategory()
         {
-            if (ModelState.IsValid)
+            var data = new List<object>();
+            var db = new ApplicationDbContext();
+            var categories = db.CategoryDetails.ToList();
+
+            if (categories != null)
             {
-                int flag = 0;
-                var db = new ApplicationDbContext();
-                var category = (from cat in db.CategoryDetails
-                                select new CategoryViewModel
-                                {
-                                    Id = cat.Id,
-                                    Cat_name = cat.Name,
-                                    Cat_desc = cat.Description
-                                }).ToList();
-
-                foreach (var item in category)
+                foreach (var category in categories)
                 {
-                    if (item.Cat_name.Equals(model.Cat_name, StringComparison.CurrentCultureIgnoreCase))
+                    data.Add(new
                     {
-                        ViewBag.message = "Category already exist!";
-                        flag = 1;
-                        break;
-                    }
-                }
-
-                if (flag == 1)
-                {
-                    return View(model);
-                }
-                else
-                {
-                    var details = new CategoryDetailsModel { Name = model.Cat_name, Description = model.Cat_desc, Created_at = DateTime.Now, Updated_at = DateTime.Now };
-                    db.CategoryDetails.Add(details);
-                    db.SaveChanges();
-                    ModelState.Clear();
-                    ViewBag.message = "Successfully Created";
-
-                    return RedirectToAction("ViewListCategory");
+                        id = category.Id,
+                        name = category.Name,
+                        desc = category.Description
+                    });
                 }
             }
-            return View(model);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -2568,7 +2669,7 @@ namespace PCartWeb.Controllers
                     CultureInfo culture = new CultureInfo("es-ES");
                     var startDate = Convert.ToDateTime(disCheck.DateStart, culture);
                     var endStart = Convert.ToDateTime(disCheck.DateEnd, culture);
-                    if (startDate <= currDate && endStart > currDate)
+                    if ((startDate <= currDate || startDate >= currDate) && endStart > currDate)
                     {
                         var discountProdCheck = db.DiscountedProducts.Where(x => x.DiscountID == disCheck.Id).ToList();
 
@@ -3062,6 +3163,18 @@ namespace PCartWeb.Controllers
 
         public ActionResult ViewListDiscount()
         {
+            Session.Abandon();
+            Session.Clear();
+            Session.RemoveAll();
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadDiscount()
+        {
+            var data = new List<object>();
+
             var user = User.Identity.GetUserId();
             var db = new ApplicationDbContext();
             var coopAdmin = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
@@ -3076,7 +3189,22 @@ namespace PCartWeb.Controllers
                                  DateEnd = disc.DateEnd
                              }).OrderByDescending(x => x.Id).ToList();
 
-            return View(discounts);
+            if (discounts != null)
+            {
+                foreach (var discount in discounts)
+                {
+                    data.Add(new
+                    {
+                        id = discount.Id,
+                        name = discount.Name,
+                        percent = discount.Percent,
+                        dateStart = discount.DateStart,
+                        dateEnd = discount.DateEnd,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         //End of Product Module
@@ -4060,25 +4188,55 @@ namespace PCartWeb.Controllers
 
         public ActionResult ViewVoucherList()
         {
+            Session.Abandon();
+            Session.Clear();
+            Session.RemoveAll();
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult LoadVoucher()
+        {
+            var data = new List<object>();
             var db = new ApplicationDbContext();
             var user = User.Identity.GetUserId();
             var coopAdmin = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
-            var voucher = (from vouch in db.VoucherDetails
+            var vouchers = (from vouch in db.VoucherDetails
                            where vouch.CoopId == coopAdmin.Coop_code
                            select new ViewListVouch
                            {
                                Id = vouch.Id,
                                Name = vouch.Name,
+                               DiscountType = vouch.DiscountType,
                                Percent_Discount = vouch.Percent_Discount,
                                Min_spend = vouch.Min_spend,
                                DateStart = vouch.DateStart,
                                ExpiryDate = vouch.ExpiryDate,
                                Created_at = vouch.Created_at,
                                Updated_at = vouch.Updated_at,
-                               DiscountType = vouch.DiscountType
                            }).OrderByDescending(x => x.Id).ToList();
 
-            return View(voucher);
+            if (vouchers != null)
+            {
+                foreach (var voucher in vouchers)
+                {
+                    data.Add(new
+                    {
+                        id = voucher.Id,
+                        name = voucher.Name,
+                        type = voucher.DiscountType,
+                        minSpent = voucher.Min_spend,
+                        worth = voucher.Percent_Discount,
+                        dateStart = voucher.DateStart,
+                        expiration = voucher.ExpiryDate,
+                        created_at = voucher.Created_at,
+                        updated_at = voucher.Updated_at,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -4682,6 +4840,7 @@ namespace PCartWeb.Controllers
             db.Entry(notif).State = EntityState.Modified;
             db.SaveChanges();
 
+            data.Add(new { mess = 1 });
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -5405,6 +5564,7 @@ namespace PCartWeb.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult AccountPayables(AccountPayablesRepModel model2, HttpPostedFileBase file)
         {
@@ -5508,6 +5668,34 @@ namespace PCartWeb.Controllers
                 model.CommissionSale = commissions;
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public JsonResult LoadPayables()
+        {
+            var data = new List<object>();
+            var db = new ApplicationDbContext();
+            var user = User.Identity.GetUserId();
+            var coopAdmin = db.CoopAdminDetails.Where(x => x.UserId == user).FirstOrDefault();
+            var payables = db.CommissionSales.Where(x => x.Status == "Pending" && x.CoopCode == coopAdmin.Coop_code).ToList();
+
+            if (payables != null)
+            {
+                foreach (var payable in payables)
+                {
+                    data.Add(new
+                    {
+                        id = payable.Id,
+                        orderNo = payable.UserOrderID,
+                        fee = payable.CommissionFee,
+                        status = payable.Status,
+                        created_at = payable.Created_at,
+                        updated_at = payable.Updated_at,
+                    });
+                }
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ViewReturnRefund()

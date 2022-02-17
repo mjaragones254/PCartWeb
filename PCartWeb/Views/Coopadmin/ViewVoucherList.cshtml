@@ -1,94 +1,81 @@
 ﻿@model IEnumerable<PCartWeb.Models.ViewListVouch>
 @using System.Globalization
 @{
-    ViewBag.Title = "ViewVoucherList";
+    ViewBag.Title = "List of Vouchers";
 }
 
-<h4>Voucher List</h4>
-<hr />
-
 <head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        th {
+        h4 {
             color: white;
+        }
+
+        .origprice {
+            text-decoration: line-through;
         }
     </style>
 </head>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">List of Vouchers</h4>
+        <button style="margin-bottom: 10px" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("CreateVoucher", "Coopadmin")'">Create New</button>
 
-<p>
-    @Html.ActionLink("Create New", "CreateVoucher")
-</p>
-<div class="table-responsive table-hover">
-    <table class="table">
-        <tr class="bg-dark">
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiscountType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Percent_Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Min_spend)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExpiryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created_at)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated_at)
-            </th>
-            <th></th>
-        </tr>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Coopadmin/LoadVoucher",
+                    function (data) {
+                        var tr;
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DiscountType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Percent_Discount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Min_spend)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ExpiryDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created_at)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated_at)
-                </td>
-                <td>
-                    @{ CultureInfo culture = new CultureInfo("es-ES");
-                        CultureInfo culture1 = new CultureInfo("es-ES");
-                        var datestart = DateTime.Parse(item.DateStart, culture);
-                        var Expiryd = DateTime.Parse(item.ExpiryDate, culture1);
-                    }
-                    @if (datestart <= DateTime.Now && Expiryd >= DateTime.Now)
-                    {
-                        @Html.ActionLink("Details", "VoucherDetails", new { id = item.Id })
-                    }
-                    else
-                    {
-                        <p>
-                            @Html.ActionLink("Edit", "EditVoucher", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "DeleteVoucher", new { id = item.Id })
-                        </p>
-                    }
-                </td>
-            </tr>
-        }
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].name + "</td>");
+                            tr.append("<td>" + data[i].type + "</td>");
+                            tr.append("<td>" + data[i].worth + "</td>");
+                            tr.append("<td>" + data[i].minSpent + "</td>");
+                            tr.append("<td>" + data[i].dateStart + "</td>");
+                            tr.append("<td>" + data[i].expiration + "</td>");
 
-    </table>
+                            var datestart = data[i].dateStart.split('/');
+                            var currDate = new Date();
+                            var year = currDate.getFullYear();
+                            var month = currDate.getMonth() + 1;
+                            var day = currDate.getDate();
+
+                            if (parseInt(datestart[0]) > day && parseInt(datestart[1]) >= month && parseInt(datestart[2]) >= year) {
+                                tr.append("<td>" + '<a href="@Url.Action("EditVoucher", "Coopadmin")?id=' + data[i].id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("VoucherDetails", "Coopadmin")?id=' + data[i].id + '">Details</a>' + ' | ' + '<a href="@Url.Action("DeleteVoucher", "Coopadmin")?id=' + data[i].id + '">Delete</a>' + "</td>");
+                            }
+                            else {
+                                tr.append("<td>" + '<a href="@Url.Action("VoucherDetails", "Coopadmin")?id=' + data[i].id + '">Details</a>' + "</td>");
+                            }
+
+                            $('.table').append(tr);
+                        }
+
+                        $('#voucherList').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="voucherList">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Discount Type</th>
+                        <th>Discount Worth</th>
+                        <th>Minimum Spent</th>
+                        <th>Date Start</th>
+                        <th>Expiration</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </div>

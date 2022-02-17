@@ -1,12 +1,16 @@
 ﻿@model PCartWeb.Models.AdminAddProductViewModel
 
 @{
-    ViewBag.Title = "AddProduct";
+    ViewBag.Title = "Add Product";
 }
 
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+
         h4 {
             color: white;
         }
@@ -95,7 +99,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save and Next" class="btn btn-default" />
+                <input type="submit" value="Save and Next" class="btn btn-secondary" />
             </div>
         </div>
     </div>
@@ -134,6 +138,7 @@
         });
     });
 </script>
+
 <script>
     function setInputFilter(textbox, inputFilter) {
         ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {

@@ -1,92 +1,170 @@
 ﻿@model PCartWeb.Models.WithdrawView
 
 @{
-    ViewBag.Title = "WithdrawPendingsReport";
+    ViewBag.Title = "Co-op Withdraw Request";
     int id = 0;
 }
 
-<h2>Withdraw Pendings Report</h2>
+<head>
+    <link href="~/Content/css/customStyle.css" rel="stylesheet" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
 
-<div class="container-sm">
-    <div class="row">
-        <!-- Paypal Requests -->
-        <div class="col">
-            <div class="table-responsive">
-                <table class="table table-hover table-primary">
-                    <thead>
-                        <tr>
-                            <th colspan="5" style="text-align:center"><h4>Paypal</h4></th>
-                        </tr>
-                        <tr>
-                            <th scope="col">Coop Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Amount Requested</th>
-                            <th scope="col">Date Requested</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    @for (var i = 0; i < Model.ViewModel.Count; i++)
-                    {
-                        if (Model.ViewModel[i].Method == "Paypal")
-                        {
-                            id = Model.ViewModel[i].Id;
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].CoopName) </td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Email)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Amount)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].DateRequested)</td>
-                                <td>
-                                    <button onclick="location.href = '@Url.Action("WithdrawRequestDetail","Admin", new { id = Model.ViewModel[i].Id })'" class="btn btn-outline-primary">View</button>
-                                </td>
-                            </tr>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Co-op Withdraw Request</h4>
+        <hr />
+
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Admin/LoadCoopList",
+                    function (data) {
+                        var tr;
+
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].name + "</td>");
+                            tr.append("<td>" + data[i].address + "</td>");
+                            tr.append("<td>" + data[i].contact + "</td>");
+                            tr.append("<td>" + data[i].dateCreated + "</td>");
+                            tr.append("<td>" + data[i].dateUpdated + "</td>");
+                            tr.append("<td>" + '<a href="@Url.Action("DisplayCoopDetailReq", "Admin")?id=' + data[i].coopId + '">Details</a>' + "</td>");
+
+                            if (data[i].isLocked == "Unlock") {
+                                tr.append("<td>" + '<a href="@Url.Action("LockCoop", "Admin")?id=' + data[i].coopId + '">Lock</a>' + "</td>");
+                            }
+                            else {
+                                tr.append("<td>" + '<a href="@Url.Action("UnlockCoop", "Admin")?id=' + data[i].coopId + '">Unlock</a>' + "</td>");
+                            }
+
+                            $('.table').append(tr);
                         }
+
+                        $('#coopList').DataTable();
                     }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="paypal">
+                <thead>
                     <tr>
-                        <td colspan="5" style="text-align:center;">No other data...</td>
+                        <th>Co-op Name</th>
+                        <th>Email</th>
+                        <th>Amount Requested</th>
+                        <th>Date Requested</th>
+                        <th></th>
                     </tr>
-                </table>
-            </div>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-        <!-- Remittance Requests -->
-        <div class="col">
-            <div class="table-responsive">
-                <table class="table table-hover table-info">
-                    <thead>
-                        <tr>
-                            <th colspan="6" style="text-align:center"><h4>Remittance</h4></th>
-                        </tr>
-                        <tr>
-                            <th scope="col">Coop Name</th>
-                            <th scope="col">Fullname</th>
-                            <th scope="col">Tel. Number</th>
-                            <th scope="col">Amount Requested</th>
-                            <th scope="col">Date Requested</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    @for(var i = 0; i < Model.ViewModel.Count; i++)
-                    {
-                        if (Model.ViewModel[i].Method == "Cebuana Lhuillier" || Model.ViewModel[i].Method == "M Lhuillier" || Model.ViewModel[i].Method == "Palawan Express")
-                        {
-                            id = Model.ViewModel[i].Id;
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].CoopName)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Fullname)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Contact)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Amount)</td>
-                                <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].DateRequested)</td>
-                                <td>
-                                    <button onclick="location.href = '@Url.Action("WithdrawRequestDetail","Admin", new { id = Model.ViewModel[i].Id })'" class="btn btn-outline-primary">View</button>
-                                </td>
-                            </tr>
-                        }
-                    }
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="remittance">
+                <thead>
                     <tr>
-                        <td colspan="6" style="text-align:center;">No other data...</td>
+                        <th>Co-op Name</th>
+                        <th>Fullname</th>
+                        <th>Contact No.</th>
+                        <th>Amount Requested</th>
+                        <th>Date Requested</th>
+                        <th></th>
                     </tr>
-                </table>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="container-sm">
+            <div class="row">
+                <!-- Paypal Requests -->
+                <div class="col">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-primary">
+                            <thead>
+                                <tr>
+                                    <th colspan="5" style="text-align:center"><h4>Paypal</h4></th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Coop Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Amount Requested</th>
+                                    <th scope="col">Date Requested</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            @for (var i = 0; i < Model.ViewModel.Count; i++)
+                            {
+                                if (Model.ViewModel[i].Method == "Paypal")
+                                {
+                                    id = Model.ViewModel[i].Id;
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].CoopName) </td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Email)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Amount)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].DateRequested)</td>
+                                        <td>
+                                            <button onclick="location.href = '@Url.Action("WithdrawRequestDetail","Admin", new { id = Model.ViewModel[i].Id })'" class="btn btn-outline-primary">View</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            <tr>
+                                <td colspan="5" style="text-align:center;">No other data...</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- Remittance Requests -->
+                <div class="col">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-info">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" style="text-align:center"><h4>Remittance</h4></th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Coop Name</th>
+                                    <th scope="col">Fullname</th>
+                                    <th scope="col">Tel. Number</th>
+                                    <th scope="col">Amount Requested</th>
+                                    <th scope="col">Date Requested</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            @for (var i = 0; i < Model.ViewModel.Count; i++)
+                            {
+                                if (Model.ViewModel[i].Method == "Cebuana Lhuillier" || Model.ViewModel[i].Method == "M Lhuillier" || Model.ViewModel[i].Method == "Palawan Express")
+                                {
+                                    id = Model.ViewModel[i].Id;
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].CoopName)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Fullname)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Contact)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].Amount)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.ViewModel[i].DateRequested)</td>
+                                        <td>
+                                            <button onclick="location.href = '@Url.Action("WithdrawRequestDetail","Admin", new { id = Model.ViewModel[i].Id })'" class="btn btn-outline-primary">View</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            <tr>
+                                <td colspan="6" style="text-align:center;">No other data...</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-

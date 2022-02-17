@@ -1,89 +1,109 @@
-﻿@model IEnumerable<PCartWeb.Models.UserViewModel>
-@{
-    ViewBag.Title = "ViewMemberList";
-    var accnt = "";
-    var status = "";
+﻿@{
+    ViewBag.Title = "List of Members";
 }
-
-<h2 style="margin: 25px 0 25px 0;">Member List</h2>
 
 <head>
     <link rel="stylesheet" href="~/Content/css/customStyle.css" />
     <style>
-        th {
+        h4 {
             color: white;
         }
     </style>
 </head>
 
-    <p>
-        @Html.ActionLink("Add Member", "CreateMember")
-    </p>
-<div class="table-responsive table-hover">
-    <table class="table" style="margin: 20px;">
-        <thead>
-            <tr class="bg-dark">
-                <th scope="col">
-                    Firstname
-                </th>
-                <th scope="col">
-                    Lastname
-                </th>
-                <th scope="col">
-                    Date Created
-                </th>
-                <th scope="col">
-                    Date Updated
-                </th>
-                <th scope="col">
-                    Email
-                </th>
-                <th scope="col">
-                    Role
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="displayMembers">
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td scope="row">
-                        @Html.DisplayFor(modelItem => item.Firstname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Lastname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Created_at)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Updated_at)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Role)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "EditUser", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "DetailsOfUser", new { id = item.Id }) |
-                        @if (item.IsActive == "Active")
-                        {
-                            status = item.IsActive;
-                            accnt = item.AccountId;
-                            <button type="button" onclick="location.href = '@Url.Action("DeactivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Deactivate</button>
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">List of Members</h4>
+        <button style="margin-bottom: 10px" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("CreateMember", "Coopadmin")'">Add Member</button>
+
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $.getJSON("../Coopadmin/LoadMember",
+                    function (data) {
+                        var tr;
+
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].firstname + "</td>");
+                            tr.append("<td>" + data[i].lastname + "</td>");
+                            tr.append("<td>" + data[i].email + "</td>");
+                            tr.append("<td>" + data[i].created_at + "</td>");
+                            tr.append("<td>" + data[i].updated_at + "</td>");
+
+                            if (data[i].isActive == "Active") {
+                                tr.append("<td>" + '<a href="@Url.Action("EditUser", "Coopadmin")?id=' + data[i].id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("DetailsOfUser", "Coopadmin")?id=' + data[i].id + '">Details</a>' + ' | ' + '<a href="@Url.Action("DeactivateMember", "Coopadmin")?id=' + data[i].id + '">Deactivate</a>' + "</td>");
+                            }
+                            else {
+                                tr.append("<td>" + '<a href="@Url.Action("EditUser", "Coopadmin")?id=' + data[i].id + '">Edit</a>' + ' | ' + '<a href="@Url.Action("DetailsOfUser", "Coopadmin")?id=' + data[i].id + '">Details</a>' + ' | ' + '<a href="@Url.Action("ActivateMember", "Coopadmin")?id=' + data[i].id + '">Activate</a>' + "</td>");
+                            }
+
+                            $('.table').append(tr);
                         }
-                        else
-                        {
-                            status = item.IsActive;
-                            accnt = item.AccountId;
-                            <button type="button" onclick="location.href = '@Url.Action("ActivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Activate</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+                        $('#memberList').DataTable();
+                    }
+                );
+            });
+        </script>
+
+        <div class="table-responsive table-hover">
+            <table class="table table-striped table-bordered table-hover" id="memberList">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                        <th>Date Created</th>
+                        <th>Date Updated</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                @*<tbody id="displayMembers">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td scope="row">
+                                @Html.DisplayFor(modelItem => item.Firstname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Lastname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created_at)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Updated_at)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "EditUser", new { id = item.Id }) |
+                                @Html.ActionLink("Details", "DetailsOfUser", new { id = item.Id }) |
+                                @if (item.IsActive == "Active")
+                                {
+                                    status = item.IsActive;
+                                    accnt = item.AccountId;
+                                    <button type="button" onclick="location.href = '@Url.Action("DeactivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Deactivate</button>
+                                }
+                                else
+                                {
+                                    status = item.IsActive;
+                                    accnt = item.AccountId;
+                                    <button type="button" onclick="location.href = '@Url.Action("ActivateMember", "Manage", new { id = item.AccountId })'" class="btn btn-link">Activate</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>*@
+            </table>
+        </div>
+    </div>
 </div>

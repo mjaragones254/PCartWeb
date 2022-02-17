@@ -7,13 +7,8 @@
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        .custom-ml {
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-
         .form-group {
-            margin-bottom: 0.5rem;
+            margin-bottom: 20px;
         }
 
         h4 {
@@ -89,7 +84,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-secondary" />
             </div>
         </div>
     </div>
@@ -100,7 +95,7 @@
     <script type="text/javascript">
             window.onload = function () {
                 alert("@ViewBag.Message");
-                window.location.href = '/Coopadmin/ViewVoucherList/';
+                window.location.href = '/Coopadmin/ViewVoucherList';
             };
     </script>
 }

@@ -315,6 +315,7 @@
     <Content Include="Images\defaultprofile.jpg" />
     <Content Include="Images\deliverybox.png" />
     <Content Include="Images\download.png" />
+    <Content Include="Images\eWalletHistory.png" />
     <Content Include="Images\heartred.png" />
     <Content Include="Images\heart.png" />
     <Content Include="Images\Order history.png" />

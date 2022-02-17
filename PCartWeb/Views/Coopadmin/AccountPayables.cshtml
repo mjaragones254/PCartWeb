@@ -1,85 +1,98 @@
 ﻿@model PCartWeb.Models.AccountPayablesRepModel
 
 @{
-    ViewBag.Title = "AccountPayables";
+    ViewBag.Title = "Account Payables";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <head>
     <link href="~/Content/css/customStyle.css" rel="stylesheet" />
     <style>
-        th {
+        h4 {
             color: white;
+        }
+
+        .center-block {
+            margin: auto;
+            display: block;
         }
     </style>
 </head>
-<h2>Account Payables</h2>
-<div class="custom-form-1 custom-container w-100 col-4">
-    <h4>Accounts Payable</h4>
-    <hr />
-    <div class="form-group">
-        <p style="color:red;">@ViewBag.ErrorMessage</p>
-        @if (Model.IsSucess == true)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                You have successfully paid your fees. Thank you
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        }
-        @if (Model.Status != null)
-        {
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                @Model.Status <br />
-                @Model.DueDate <br />
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        }
 
-        <input class="form-control" disabled type="text" value="Total: PHP @Model.TotalTobePay" />
-        <br />
-        <input name="submit" type="submit" id="submit" data-toggle="modal" data-target="#exampleModal2" value="Mark as Done" class="btn btn-default" />
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Accounts Payable</h4>
+        <hr />
+
+        <div class="form-group text-center">
+            <p style="color:red;">@ViewBag.ErrorMessage</p>
+
+            @if (Model.IsSucess == true)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    You have successfully paid your fees. Thank you
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @if (Model.Status != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    @Model.Status <br />
+                    @Model.DueDate <br />
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            <input class="form-control center-block text-center" disabled type="text" style="width: 300px;" value="Total: PHP @Model.TotalTobePay" />
+            <br />
+            <input name="submit" type="submit" id="submit" data-toggle="modal" data-target="#exampleModal2" style="width: 200px" value="Pay" class="btn btn-secondary" />
+        </div>
     </div>
 </div>
+
 @if (Model.CommissionSale != null)
 {
-    <div class="table-responsive table-hover">
-        <table class="table">
-            <tr class="bg-dark">
-                <th>
-                    Order No.
-                </th>
-                <th>
-                    Commission Fee
-                </th>
-                <th>
-                    Status
-                </th>
-                <th>
-                    Date Created
-                </th>
-                <th></th>
-            </tr>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script>
+            $(document).ready(function () {
+                $.getJSON("../Coopadmin/LoadPayables",
+                    function (data) {
+                        var tr;
 
-            @foreach (var item in Model.CommissionSale)
-            {
+                        for (var i = 0; i < data.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + data[i].orderNo + "</td>");
+                            tr.append("<td>" + data[i].fee + "</td>");
+                            tr.append("<td>" + data[i].status + "</td>");
+                            tr.append("<td>" + data[i].created_at + "</td>");
+
+                            $('.table').append(tr);
+                        }
+
+                        $('#payables').DataTable();
+                    }
+                );
+            });
+    </script>
+
+    <div class="table-responsive table-hover">
+        <table class="table table-striped table-bordered table-hover" id="payables">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserOrderID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CommissionFee)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Created_at)
-                    </td>
+                    <th>Order No.</th>
+                    <th>Commission Fee</th>
+                    <th>Status</th>
+                    <th>Date Created</th>
                 </tr>
-            }
+            </thead>
+            <tbody></tbody>
         </table>
     </div>
 }
@@ -108,7 +121,7 @@
                     <input type="radio" id="cebuana" name="Mode" value="Cebuana">
                     <label for="cebuana">Cebuana</label>
                     <br>
-                    <input type="radio" id="palawan" name="Mode" value="Palawan"/>
+                    <input type="radio" id="palawan" name="Mode" value="Palawan" />
                     <label for="palawan">Palawan</label>
                 </div>
                 <div class="modal-body">
@@ -116,7 +129,7 @@
                 </div>
                 <div class="modal-body">
                     @Html.EditorFor(model => Model.Fullname, new { htmlAttributes = new { @class = "form-control" } })
-                    
+
                 </div>
                 <div class="modal-body">
                     @Html.EditorFor(model => Model.Contact, new { htmlAttributes = new { @class = "form-control" } })

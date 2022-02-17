@@ -1,61 +1,75 @@
 ﻿@model PCartWeb.Models.CoopFormModel
 @{
-    ViewBag.Title = "MembershipApplication";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Membership Application";
     var form = "";
     form = Model.MembershipForm;
 }
 
-<h2>Membership Application</h2>
-<p>
-    @Html.ActionLink("View Member Applicants", "MemberApplicants")
-</p>
-<p class="text-danger">@ViewBag.ErrorMessage</p>
-@using (Html.BeginForm("UploadMembershipForm", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    if (String.IsNullOrEmpty(form))
-    {
-        <p>Please upload COOP's membership form.</p>
-        <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
-        <button class="btn btn-outline-secondary" type="submit">Upload</button>
-    }
-    else
-    {
-        <p>You can still update the membership form by uploading.</p>
-        <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
-        <button class="btn btn-outline-secondary" type="submit">Upload</button>
-    }
-}
+<head>
+    <link rel="stylesheet" href="~/Content/css/customStyle.css" />
+    <style>
+        h4 {
+            color: white;
+        }
+    </style>
+</head>
 
-@if (Model.MembershipFee != 0)
-{
-    <p><b>Membership Fee: </b> @Html.DisplayFor(model => Model.MembershipFee)</p>
-}
+<div class="container custom-form-1 custom-container">
+    <div class="form-horizontal">
+        <h4 class="w-100 bg-dark py-3 text-center">Membership Application</h4>
+        <hr />
+        <button style="margin-bottom: 10px" class="btn btn-primary" type="button" onclick="location.href = '@Url.Action("MemberApplicants", "Coopadmin")'">View Member Applicants</button>
+        <p class="text-danger">@ViewBag.ErrorMessage</p>
 
-@using (Html.BeginForm("MembershipFee", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <p>Membership Fee</p>
-    <input type="number" name="MembershipFee" value="" placeholder="Fee" class="form-control col-md-10" />
-    <button class="btn btn-outline-secondary" type="submit">Save</button>
-}
+        @using (Html.BeginForm("UploadMembershipForm", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", style = "margin: 0; padding: 0;" }))
+        {
+            if (String.IsNullOrEmpty(form))
+            {
+                <p><b>Please upload COOP's membership form.</b></p>
+                <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                <button class="btn btn-secondary" type="submit">Upload</button>
+            }
+            else
+            {
+                <p><b>You can still update the membership form by uploading.</b></p>
+                <input type="file" name="DocFile" /><label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                <button class="btn btn-secondary" type="submit">Upload</button>
+            }
+        }
 
-@if (Model.MembersDiscount != 0)
-{
-    <p><b>Member's Discount: </b> @Html.DisplayFor(model => Model.MembersDiscount)</p>
-}
+        <hr />
+        @if (Model.MembershipFee != 0)
+        {
+            <p><b>Membership Fee: </b> @Html.DisplayFor(model => Model.MembershipFee)</p>
+        }
 
-@using (Html.BeginForm("MembersDiscount", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <p>Member's Discount</p>
-    <input type="number" name="MembersDiscount" value="" placeholder="Discount" class="form-control col-md-10" />
-    <button class="btn btn-outline-secondary" type="submit">Save</button>
-}
+        @using (Html.BeginForm("MembershipFee", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", style = "margin: 0; padding: 0;" }))
+        {
+            <p><b>Membership Fee</b></p>
+            <input type="number" name="MembershipFee" value="" placeholder="Fee" class="form-control col-md-10" />
+            <button class="btn btn-secondary" type="submit" style="margin-top: 10px;">Save</button>
+        }
 
-@if (ViewBag.Message != null)
-{
-    <script type="text/javascript">
+        <hr />
+        @if (Model.MembersDiscount != 0)
+        {
+            <p><b>Member's Discount: </b> @Html.DisplayFor(model => Model.MembersDiscount)</p>
+        }
+
+        @using (Html.BeginForm("MembersDiscount", "Coopadmin", FormMethod.Post, new { enctype = "multipart/form-data", style = "margin: 0; padding: 0;" }))
+        {
+            <p><b>Member's Discount</b></p>
+            <input type="number" name="MembersDiscount" value="" placeholder="Discount" class="form-control col-md-10" />
+            <button class="btn btn-secondary" type="submit" style="margin-top: 10px;">Save</button>
+        }
+
+        @if (ViewBag.Message != null)
+        {
+            <script type="text/javascript">
             window.onload = function () {
                 alert("@ViewBag.Message");
             };
-    </script>
-}
+            </script>
+        }
+    </div>
+</div>

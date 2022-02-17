@@ -287,11 +287,17 @@ namespace PCartWeb.Models
 
     public class DriverDetails2
     {
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string Image { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string ContactNo { get; set; }
+        public string PlateNo { get; set; }
+        public string Address { get; set; }
+        public string IsActive { get; set; }
+        public string Created_at { get; set; }
+        public string Updated_at { get; set; }
         public int ForDelivery { get; set; }
     }
 

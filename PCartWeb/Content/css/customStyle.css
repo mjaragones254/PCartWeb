@@ -33,3 +33,40 @@
     color: #fff;
     background-color: #0062cc;
 }
+
+.notification {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+    .notification .badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background: red;
+        color: white;
+    }
+
+@media only screen and (max-width: 600px) {
+    .notification {
+        position: relative;
+        display: inline-block;
+        margin-top: 3%;
+        margin-left: 0;
+    }
+
+        .notification .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            margin-right: 93%;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+}
